@@ -4,5 +4,4 @@
 			Nom : William LaRocque
 			Numéro étudiant : 8397424
 *********************************************
-
-
+Je vais utiliser la technologie de OpenCPU pour utiliser R avec un Web App.
