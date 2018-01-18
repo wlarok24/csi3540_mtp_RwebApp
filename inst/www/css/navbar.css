@@ -1,0 +1,20 @@
+/*
+	Css created for the navbar for my site
+	William LaRocque
+*/
+.whiteText {
+	color : rgb(255, 255, 255) !important;
+}
+.navclass.whiteText:hover {
+	color : rgba(255, 255, 255, 0.75) !important;
+}
+#nav_or{
+	padding-left: 0;
+	padding-right: 0;
+}
+@media (max-width:768px){
+	/* this is the width at whiche the navbar collapses */
+	#nav_or{
+		display: none;
+	}
+}
