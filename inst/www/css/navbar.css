@@ -8,13 +8,19 @@
 .navclass.whiteText:hover {
 	color : rgba(255, 255, 255, 0.75) !important;
 }
-#nav_or{
-	padding-left: 0;
-	padding-right: 0;
+.signed-out a{
+	padding-left: 4px !important;
+	padding-right: 4px !important;
 }
 @media (max-width:768px){
-	/* this is the width at whiche the navbar collapses */
-	#nav_or{
+	/* this is the width at which the navbar collapses */
+	.for-non-collapsed{
 		display: none;
+	}
+}
+@media (min-width:768px){
+	/* this is the width at which the navbar collapses */
+	.for-collapsed{
+		display : none;
 	}
 }
