@@ -16,7 +16,7 @@
 <body>
 <!-- Navigation bar -->
 <nav class="navbar navbar-expand-md bg-success navbar-dark fixed-top">
-	<a class="navbar-brand" href="">Placeholder Title</a>
+	<a class="navbar-brand" href="index.php">Placeholder Title</a>
 	<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -35,23 +35,23 @@
 			<a class="nav-link disabled whiteText for-non-collapsed" href="#" id="nav_or">or</a>
 		  </li>
 		  <li class="nav-item signed-out">
-			<a class="nav-link btn btn-success whiteText" href="signup.html">Sign up</a>
+			<a class="nav-link btn btn-success whiteText" href="signup.php">Sign up</a>
 		  </li>
 		  <li class="nav-item dropdown signed-in for-non-collapsed">
 			<a class="nav-link dropdown-toggle btn btn-success whiteText" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			  My account
 			</a>
 			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-			  <!--<a class="dropdown-item" href="hub.html">My hub</a>-->
-			  <a class="dropdown-item" href="settings.html">My Settings</a>
+			  <!--<a class="dropdown-item" href="hub.php">My hub</a>-->
+			  <a class="dropdown-item" href="settings.php">My Settings</a>
 			  <button type="button" class="dropdown-item btn btn-success" >Sign out</button>
 			</div>
 		  </li>
 		  <!--<li class="nav-item signed-in for-collapsed">
-			<a class="nav-link btn btn-success whiteText" href="hub.html">My hub</a>
+			<a class="nav-link btn btn-success whiteText" href="hub.php">My hub</a>
 		  </li>-->
 		  <li class="nav-item signed-in for-collapsed">
-			<a class="nav-link btn btn-success whiteText" href="settings.html">My Settings</a>
+			<a class="nav-link btn btn-success whiteText" href="settings.php">My Settings</a>
 		  </li>
 		  <li class="nav-item signed-in for-collapsed">
 			<a class="nav-link btn btn-success whiteText" href="#">Sign out</a>
@@ -99,19 +99,27 @@
 				<h3 class="whiteText" id="inventory">Inventory</h3>
 			</div>
 			<div class="card-body">
-				<table class="table">
+				<form action="" method="post"><table class="table">
 					<thead><tr>
 						<th>Item</th>
 						<th>Quantity</th>
+						<th>Usual use size</th>
 						<th>Today's use</th>
 					</tr></thead>
-					<tbody></tbody>
+					<tbody>
+					<tr><td>Patatoes</td><td>20 units</td><td>2 units</td><td><input type="number" class="form-control" id="Patatoes" name="Patatoes" value=0 required></td></tr>
+					<tr><td>Yogurt</td><td>3000 mL</td><td>200 mL</td><td><input type="number" class="form-control" id="Yogurt" name="Yogurt" value=0 required></td></tr>
+					<tr><td>Toilet paper</td><td>48 units</td><td>1 units</td><td><input type="number" class="form-control" id="Toilet_paper" name="Toilet_paper" value=0 required></td></tr>
+					</tbody>
 					<tfoot><tr>
 						<th>Item</th>
 						<th>Quantity</th>
+						<th>Usual use size</th>
 						<th>Today's use</th>
 					</tr></tfoot>
 				</table>
+				<button type="submit" class="btn btn-success" name='submit_use'>Submit today's use</button>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -121,11 +129,7 @@
 				<h3 class="whiteText" id="graph">Graph reports</h3>
 			</div>
 			<div class="card-body">
-				<p class="card-text">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-					<br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-					<br>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-				</p>
+				<img src="graph_mockups.png" />
 			</div>
 		</div>
 	</div>

@@ -16,8 +16,7 @@
 }
 .card {
 	border : 2px solid #28a745;
-	margin-top : 15px;
-	margin-bottom : 15px;
+	margin : 15px;
 }
 .card-header {
 	border-top-left-radius : 0px !important;
