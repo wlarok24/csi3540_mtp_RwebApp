@@ -22,38 +22,40 @@
 	</button>
 	<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 		<ul class="navbar-nav">
-		  <li class="nav-item signed-out">
-			<a class="nav-link btn btn-success whiteText" href="#" data-toggle="modal" data-target="#login-modal">Sign in</a>
-		  </li>
-		  <li class="nav-item signed-out">
-			<a class="nav-link disabled whiteText for-non-collapsed" href="#" id="nav_or">or</a>
-		  </li>
-		  <li class="nav-item signed-out">
-			<a class="nav-link btn btn-success whiteText" href="signup.php">Sign up</a>
-		  </li>
-		  <li class="nav-item dropdown signed-in for-non-collapsed">
-			<a class="nav-link dropdown-toggle btn btn-success whiteText" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			  My account
-			</a>
-			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-			  <a class="dropdown-item" href="hub.php">My hub</a>
-			  <a class="dropdown-item" href="settings.php">My Settings</a>
-			  <button type="button" class="dropdown-item btn btn-success" >Sign out</button>
-			</div>
-		  </li>
-		  <li class="nav-item signed-in for-collapsed">
-			<a class="nav-link btn btn-success whiteText" href="hub.php">My hub</a>
-		  </li>
-		  <!--<li class="nav-item signed-in for-collapsed">
-			<a class="nav-link btn btn-success whiteText" href="settings.php">My Settings</a>
-		  </li>-->
-		  <li class="nav-item signed-in for-collapsed">
-			<a class="nav-link btn btn-success whiteText" href="#">Sign out</a>
-		  </li>
+		  <?php
+			session_start();
+			if(!isset($_SESSION["user_email"])){
+				//Import cookies
+				if (isset($_COOKIE['user_name']) && isset($_COOKIE['user_email'])){
+					$_SESSION["user_name"] = $_COOKIE['user_name'];
+					$_SESSION["user_email"] = $_COOKIE['user_email'];
+				}
+			}
+			//Now check session data for a logged in user
+			if(isset($_SESSION["user_email"])){
+			  //user is logged in
+			  echo "<li class=\"nav-item dropdown signed-in for-non-collapsed\">
+						<a class=\"nav-link dropdown-toggle btn btn-success whiteText\" href=\"#\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+							{$_SESSION["user_name"]}
+						</a>
+						<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"navbarDropdownMenuLink\">
+						  <a class=\"dropdown-item\" href=\"hub.php\">My hub</a>
+						  <a class=\"dropdown-item\" href=\"signout.php\">Sign out</a>
+						</div>
+					</li>
+					<li class=\"nav-item signed-in for-collapsed\">
+						<a class=\"nav-link btn btn-success whiteText\" href=\"hub.php\">My hub</a>
+					</li>
+					<li class=\"nav-item signed-in for-collapsed\">
+						<a class=\"nav-link btn btn-success whiteText\" href=\"signout.php\">Sign out</a>
+					</li>";
+			} else {
+			  echo "<script>window.location.replace(\"index.php\");</script>"; //If no user is logged in, redirect to home page
+			}
+		  ?>
 		</ul>
 	</div>
 </nav>
-
 <!-- Log in modal -->
 <div class="modal" tabindex="-1" role="dialog" id="login-modal">
   <div class="modal-dialog modal-dialog-centered" role="document">

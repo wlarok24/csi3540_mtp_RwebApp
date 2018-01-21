@@ -14,6 +14,69 @@
 	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
 </head>
 <body>
+<?php
+	$message = "";
+	session_start();
+	// if it is a login attempt
+	if(isset($_POST['signin'])){
+		$servername = "localhost";
+		$username = "CSI3540PHP";
+		$password = "Alpha2595!";
+		$dbname = "CSI3540DB";
+		if(!empty($_POST['login-email']) && !empty($_POST['login-password'])){
+			// Create connection
+			$conn = new mysqli($servername, $username, $password, $dbname);
+			// Check connection
+			if ($conn->connect_error) {
+				die("Connection failed: " . $conn->connect_error);
+			} 
+			$query = "SELECT name, email, salt, password FROM user where email = '" . $_POST['login-email'] . "'";
+			$user = mysqli_fetch_array(mysqli_query($conn, $query));
+			if($user){ //query got a valid user
+				$hashed_password = strval(hash("sha256", $_POST['login-password'] . $user['salt'], FALSE));
+				if($hashed_password == $user['password']){
+					//user provided the correct password
+					$_SESSION["user_name"] = $user['name'];
+					$_SESSION["user_email"] = $user['email'];
+					
+					//Remember me 
+					if(isset($_POST['login-rememberme'])){
+						//Create cookies (expire in a year)
+						setcookie("user_name", $user['name'], time() + (365*24*60*60));
+						setcookie("user_email", $user['email'], time() + (365*24*60*60));
+					} else {
+						//Delete cookies
+						if (isset($_COOKIE['user_name'])) {
+							unset($_COOKIE['user_name']);
+							setcookie('user_name', '', time() - 3600); // empty value and old timestamp, thus browser will delete
+						}
+						if (isset($_COOKIE['user_email'])) {
+							unset($_COOKIE['user_email']);
+							setcookie('user_email', '', time() - 3600); // empty value and old timestamp, thus browser will delete
+						}
+					}
+				} else {
+					$message = "Invalid password";
+				}
+			} else {
+				$message = "Invalid email or password";
+			}
+			$conn->close();
+		} else {
+			$message = "Please enter both your email and password.";
+		}
+	} else {
+		//Check cookies for logged in user
+		if (isset($_COOKIE['user_name']) && isset($_COOKIE['user_email'])){
+			$_SESSION["user_name"] = $_COOKIE['user_name'];
+			$_SESSION["user_email"] = $_COOKIE['user_email'];
+		}
+	}
+	if($message){
+		echo '<div class=\"alert alert-danger\">
+						<strong>Error</strong><br>' . $message . '</div>';
+	}
+?>
 <!-- Navigation bar -->
 <nav class="navbar navbar-expand-md bg-success navbar-dark">
 	<a class="navbar-brand" href="">Placeholder Title</a>
@@ -22,34 +85,40 @@
 	</button>
 	<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 		<ul class="navbar-nav">
-		  <li class="nav-item signed-out">
-			<a class="nav-link btn btn-success whiteText" href="#" data-toggle="modal" data-target="#login-modal">Sign in</a>
-		  </li>
-		  <li class="nav-item signed-out">
-			<a class="nav-link disabled whiteText for-non-collapsed" href="#" id="nav_or">or</a>
-		  </li>
-		  <li class="nav-item signed-out">
-			<a class="nav-link btn btn-success whiteText" href="signup.php">Sign up</a>
-		  </li>
-		  <li class="nav-item dropdown signed-in for-non-collapsed">
-			<a class="nav-link dropdown-toggle btn btn-success whiteText" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			  My account
-			</a>
-			<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-			  <a class="dropdown-item" href="hub.php">My hub</a>
-			  <a class="dropdown-item" href="settings.php">My Settings</a>
-			  <button type="button" class="dropdown-item btn btn-success" >Sign out</button>
-			</div>
-		  </li>
-		  <li class="nav-item signed-in for-collapsed">
-			<a class="nav-link btn btn-success whiteText" href="hub.php">My hub</a>
-		  </li>
-		  <li class="nav-item signed-in for-collapsed">
-			<a class="nav-link btn btn-success whiteText" href="settings.php">My Settings</a>
-		  </li>
-		  <li class="nav-item signed-in for-collapsed">
-			<a class="nav-link btn btn-success whiteText" href="#">Sign out</a>
-		  </li>
+		  <?php
+			if(isset($_SESSION["user_email"])){
+			  //user is logged in
+			  echo "<li class=\"nav-item dropdown signed-in for-non-collapsed\">
+						<a class=\"nav-link dropdown-toggle btn btn-success whiteText\" href=\"#\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+							{$_SESSION["user_name"]}
+						</a>
+						<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"navbarDropdownMenuLink\">
+						  <a class=\"dropdown-item\" href=\"hub.php\">My hub</a>
+						  <a class=\"dropdown-item\" href=\"settings.php\">My Settings</a>
+						  <a class=\"dropdown-item\" href=\"signout.php\">Sign out</a>
+						</div>
+					</li>
+					<li class=\"nav-item signed-in for-collapsed\">
+						<a class=\"nav-link btn btn-success whiteText\" href=\"hub.php\">My hub</a>
+					</li>
+					<li class=\"nav-item signed-in for-collapsed\">
+						<a class=\"nav-link btn btn-success whiteText\" href=\"settings.php\">My Settings</a>
+					</li>
+					<li class=\"nav-item signed-in for-collapsed\">
+						<a class=\"nav-link btn btn-success whiteText\" href=\"signout.php\">Sign out</a>
+					</li>";
+			} else {
+			  echo "<li class=\"nav-item signed-out\">
+						<a class=\"nav-link btn btn-success whiteText\" href=\"#\" data-toggle=\"modal\" data-target=\"#login-modal\">Sign in</a>
+					</li>
+					<li class=\"nav-item signed-out\">
+						<a class=\"nav-link disabled whiteText for-non-collapsed\" href=\"#\" id=\"nav_or\">or</a>
+					</li>
+					<li class=\"nav-item signed-out\">
+						<a class=\"nav-link btn btn-success whiteText\" href=\"signup.php\">Sign up</a>
+					</li>";
+			}
+		  ?>
 		</ul>
 	</div>
 </nav>
@@ -57,34 +126,34 @@
 <div class="modal" tabindex="-1" role="dialog" id="login-modal">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Sign in</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="login-form">
-        <form>
-		  <div class="form-group">
-			<label for="email">Email address</label>
-			<input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email" id="login-email" required>
+      <form action="index.php" method="post">
+		  <div class="modal-header">
+			<h5 class="modal-title">Sign in</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
 		  </div>
-		  <div class="form-group">
-			<label for="password">Password</label>
-			<input type="password" class="form-control" id="password" placeholder="Password"  id="login-password" required>
+		  <div class="modal-body" id="login-form">
+			  <div class="form-group">
+				<label for="email">Email address</label>
+				<input type="email" class="form-control" id="email" placeholder="Enter email" id="login-email" name="login-email" required>
+			  </div>
+			  <div class="form-group">
+				<label for="password">Password</label>
+				<input type="password" class="form-control" id="password" placeholder="Password"  id="login-password" name="login-password" required>
+			  </div>
+			  <div class="form-check">
+				<input class="form-check-input" type="checkbox" value="" id="login-rememberme" name="login-rememberme">
+				<label class="form-check-label" for="rememberme">
+					Remember me
+				</label>
+			</div>
 		  </div>
-		  <div class="form-check">
-			<input class="form-check-input" type="checkbox" value="" id="login-rememberme">
-			<label class="form-check-label" for="rememberme">
-				Remember me
-			</label>
-		</div>
-		</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success">Sign in</button>
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-      </div>
+		  <div class="modal-footer">
+			<button type="submit" class="btn btn-success" name='signin' onclick="form_submit()">Sign in</button>
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		  </div>
+	  </form>
     </div>
   </div>
 </div>

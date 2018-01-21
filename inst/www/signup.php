@@ -46,7 +46,7 @@
 					$salt = strval(md5(strval(rand()), FALSE));
 					$hashed_password = strval(hash("sha256", $_POST['password'] . $salt, FALSE));
 					$insert = "INSERT INTO user (name, email, salt, password) VALUES(\"{$_POST['name']}\", 
-					\"{$_POST['email']}\", UNHEX(\"{$salt}\"), UNHEX(\"{$hashed_password}\"))";
+						\"{$_POST['email']}\", \"{$salt}\", \"{$hashed_password}\")";
 					// Create connection
 					$conn = new mysqli($servername, $username, $password, $dbname);
 					// Check connection
