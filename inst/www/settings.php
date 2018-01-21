@@ -6,6 +6,7 @@
 	<!-- stylesheets and javascripts imports -->
 	  <link rel="stylesheet" href="css/bootstrap.min.css">
 	  <link rel="stylesheet" href="css/navbar.css">
+	  <link rel="stylesheet" href="css/cards.css">
 	  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 		  rel="stylesheet">-->
 	  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
@@ -52,6 +53,7 @@
 		</ul>
 	</div>
 </nav>
+
 <!-- Log in modal -->
 <div class="modal" tabindex="-1" role="dialog" id="login-modal">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -83,6 +85,48 @@
 </div>
 
 <!-- Page content -->
-
+<h1 id="myhub" class="title">My settings</h1>
+<div class="container-fluid extra-padding" id="card_container">
+	<div class="row">
+	<div class="col-xs-12">
+		<div class="card text-center" id="cards-items">
+			<div class="card-header bg-success">
+				<h3 class="whiteText">Change your password</h3>
+			</div>
+			<div class="card-body" id="collapseOne" class="collapse show">
+				<form action="" method="post">
+					<div class="form-group row">
+						<label for="email" class="col-sm-4">Your old password</label>
+						<input type="password" class="form-control col-sm-8" id="email" name="email" placeholder="Password" required>
+					</div>
+					<div class="form-group row">
+						<label for="password" class="col-sm-4">Your new password</label>
+						<input type="password" class="form-control col-sm-8" id="password" name="password" placeholder="Password" required>
+					</div>
+					<div class="form-group row">
+						<label for="password" class="col-sm-4">Repeat your new password</label>
+						<input type="password" class="form-control col-sm-8" id="passwordRepeat" name="passwordRepeat" placeholder="Password" required>
+					</div>
+					<button type="submit" class="btn btn-success" name='submit_new_password'>Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12">
+		<div class="card text-center" id="cards-hub">
+			<div class="card-header bg-success">
+				<h3 class="whiteText">Add additional information</h3>
+			</div>
+			<div class="card-body">
+				<b class="">Note : the information is for statistical purposes only</b>
+				<form action="" method="post">
+				
+				<button type="submit" class="btn btn-success" name='submit_new_password'>Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
 </body>
 </html>
