@@ -106,11 +106,7 @@
 						<th>Usual use size</th>
 						<th>Today's use</th>
 					</tr></thead>
-					<tbody>
-					<tr><td>Patatoes</td><td>20 units</td><td>2 units</td><td><input type="number" class="form-control" id="Patatoes" name="Patatoes" value=0 required></td></tr>
-					<tr><td>Yogurt</td><td>3000 mL</td><td>200 mL</td><td><input type="number" class="form-control" id="Yogurt" name="Yogurt" value=0 required></td></tr>
-					<tr><td>Toilet paper</td><td>48 units</td><td>1 units</td><td><input type="number" class="form-control" id="Toilet_paper" name="Toilet_paper" value=0 required></td></tr>
-					</tbody>
+					<tbody></tbody>
 					<tfoot><tr>
 						<th>Item</th>
 						<th>Quantity</th>
@@ -129,7 +125,6 @@
 				<h3 class="whiteText" id="graph">Graph reports</h3>
 			</div>
 			<div class="card-body">
-				<img src="graph_mockups.png" />
 			</div>
 		</div>
 	</div>
