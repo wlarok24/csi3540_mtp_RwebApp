@@ -1,0 +1,24 @@
+/*
+	Css created for the home page for my site
+	William LaRocque
+*/
+.title{
+	margin-top: 50px;
+	padding-top: 15px;
+	text-align: center;
+}
+.extra-padding{
+	padding-left: 30px;
+	padding-right: 30px;
+}
+.bg-white{
+	background-color : #ffffff !important;
+}
+.card {
+	border : 2px solid #28a745;
+	margin : 15px;
+}
+.card-header {
+	border-top-left-radius : 0px !important;
+	border-top-right-radius : 0px !important;
+}

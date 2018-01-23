@@ -6,7 +6,7 @@
 	<!-- stylesheets and javascripts imports -->
 	  <link rel="stylesheet" href="css/bootstrap.min.css">
 	  <link rel="stylesheet" href="css/navbar.css">
-	  <link rel="stylesheet" href="css/cards.css">
+	  <link rel="stylesheet" href="css/hub.css">
 	  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 		  rel="stylesheet">-->
 	  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
@@ -56,41 +56,12 @@
 		</ul>
 	</div>
 </nav>
-<!-- Log in modal -->
-<div class="modal" tabindex="-1" role="dialog" id="login-modal">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Sign in</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="login-form">
-        <form>
-		  <div class="form-group">
-			<label for="exampleInputEmail1">Email address</label>
-			<input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter your email">
-		  </div>
-		  <div class="form-group">
-			<label for="exampleInputPassword1">Password</label>
-			<input type="password" class="form-control" id="password" placeholder="Password">
-		  </div>
-		</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success">Sign in</button>
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Page content -->
 <h1 id="myhub" class="title">My hub</h1>
 <div class="container-fluid extra-padding">
 	<div class="row">
-	<div class="col-xs-12">
+	<div class="col-12">
 		<div class="card text-center" id="cards-items">
 			<div class="card-header bg-success">
 				<h3 class="whiteText" id="inventory">Inventory</h3>
@@ -111,12 +82,16 @@
 						<th>Today's use</th>
 					</tr></tfoot>
 				</table>
-				<button type="submit" class="btn btn-success" name='submit_use'>Submit today's use</button>
+				<div class="btn-group">
+					<button type="button" class="btn btn-success" name='add_ingredient' id='add_ingredient'>Add</button>
+					<button type="button" class="btn btn-success" name='remove_ingredient' id='remove_ingredient'>Remove</button>
+					<button type="button" class="btn btn-success" name='submit_use' id='submit_use'>Submit use</button>
+				</div>
 				</form>
 			</div>
 		</div>
 	</div>
-	<div class="col-xs-12">
+	<div class="col-12">
 		<div class="card text-center" id="cards-hub">
 			<div class="card-header bg-success">
 				<h3 class="whiteText" id="graph">Graph reports</h3>
