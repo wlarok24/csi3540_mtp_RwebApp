@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<!-- stylesheets and javascripts imports -->
 	  <link rel="stylesheet" href="css/bootstrap.min.css">
-	  <link rel="stylesheet" href="css/navbar.css">
+	  <link rel="stylesheet" href="css/theme.css">
 	  <link rel="stylesheet" href="css/settings.css">
 	  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 		  rel="stylesheet">-->
@@ -13,10 +13,10 @@
 	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
 </head>
-<body>
+<body class="bg-dark themeText">
 <!-- Navigation bar -->
-<nav class="navbar navbar-expand-md bg-success navbar-dark">
-	<a class="navbar-brand" href="index.php">Placeholder Title</a>
+<nav class="navbar navbar-expand-md bg-theme navbar-light fixed-top">
+	<a class="navbar-brand" href="index.html">Placeholder Title</a>
 	<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -35,7 +35,7 @@
 			if(isset($_SESSION["user_email"])){
 			  //user is logged in
 			  echo "<li class=\"nav-item dropdown signed-in for-non-collapsed\">
-						<a class=\"nav-link dropdown-toggle btn btn-success whiteText\" href=\"#\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+						<a class=\"nav-link dropdown-toggle btn btn-theme blackText\" href=\"#\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
 							{$_SESSION["user_name"]}
 						</a>
 						<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"navbarDropdownMenuLink\">
@@ -44,10 +44,10 @@
 						</div>
 					</li>
 					<li class=\"nav-item signed-in for-collapsed\">
-						<a class=\"nav-link btn btn-success whiteText\" href=\"hub.php\">My hub</a>
+						<a class=\"nav-link btn btn-theme blackText\" href=\"hub.php\">My hub</a>
 					</li>
 					<li class=\"nav-item signed-in for-collapsed\">
-						<a class=\"nav-link btn btn-success whiteText\" href=\"signout.php\">Sign out</a>
+						<a class=\"nav-link btn btn-theme blackText\" href=\"signout.php\">Sign out</a>
 					</li>";
 			} else {
 			  echo "<script>window.location.replace(\"index.php\");</script>"; //If no user is logged in, redirect to home page
@@ -63,10 +63,10 @@
 	<div class="row">
 	<div class="col-12">
 		<div class="card text-center" id="cards-items">
-			<div class="card-header bg-success">
-				<h3 class="whiteText">Change your password</h3>
+			<div class="card-header bg-theme">
+				<h3 class="blackText">Change your password</h3>
 			</div>
-			<div class="card-body" id="collapseOne" class="collapse show">
+			<div class="card-body bg-dark themeText" id="collapseOne" class="collapse show">
 				<form action="" method="post">
 					<div class="form-group row">
 						<label for="email" class="col-sm-4">Your old password</label>
@@ -80,21 +80,21 @@
 						<label for="password" class="col-sm-4">Repeat your new password</label>
 						<input type="password" class="form-control col-sm-8" id="passwordRepeat" name="passwordRepeat" placeholder="Password" required>
 					</div>
-					<button type="submit" class="btn btn-success" name='submit_new_password'>Submit</button>
+					<button type="submit" class="btn btn-theme" name='submit_new_password'>Submit</button>
 				</form>
 			</div>
 		</div>
 	</div>
 	<div class="col-12">
 		<div class="card text-center" id="cards-hub">
-			<div class="card-header bg-success">
-				<h3 class="whiteText">Add additional information</h3>
+			<div class="card-header bg-theme">
+				<h3 class="blackText">Add additional information</h3>
 			</div>
-			<div class="card-body">
+			<div class="card-body bg-dark themeText">
 				<b class="">Note : the information is for statistical purposes only</b>
 				<form action="" method="post">
 				
-				<button type="submit" class="btn btn-success" name='submit_new_password'>Submit</button>
+				<button type="submit" class="btn btn-theme" name='submit_new_password'>Submit</button>
 				</form>
 			</div>
 		</div>

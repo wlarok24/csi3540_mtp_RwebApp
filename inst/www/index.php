@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<!-- stylesheets and javascripts imports -->
 	  <link rel="stylesheet" href="css/bootstrap.min.css">
-	  <link rel="stylesheet" href="css/navbar.css">
+	  <link rel="stylesheet" href="css/theme.css">
 	  <link rel="stylesheet" href="css/index.css">
 	  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 		  rel="stylesheet">-->
@@ -13,7 +13,7 @@
 	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
 </head>
-<body>
+<body class="bg-dark">
 <?php
 	$message = "";
 	session_start();
@@ -78,7 +78,7 @@
 	}
 ?>
 <!-- Navigation bar -->
-<nav class="navbar navbar-expand-md bg-success navbar-dark">
+<nav class="navbar navbar-expand-md bg-theme navbar-light fixed-top">
 	<a class="navbar-brand" href="">Placeholder Title</a>
 	<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -89,7 +89,7 @@
 			if(isset($_SESSION["user_email"])){
 			  //user is logged in
 			  echo "<li class=\"nav-item dropdown signed-in for-non-collapsed\">
-						<a class=\"nav-link dropdown-toggle btn btn-success whiteText\" href=\"#\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
+						<a class=\"nav-link dropdown-toggle btn btn-theme blackText\" href=\"#\" id=\"navbarDropdownMenuLink\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">
 							{$_SESSION["user_name"]}
 						</a>
 						<div class=\"dropdown-menu dropdown-menu-right\" aria-labelledby=\"navbarDropdownMenuLink\">
@@ -99,23 +99,23 @@
 						</div>
 					</li>
 					<li class=\"nav-item signed-in for-collapsed\">
-						<a class=\"nav-link btn btn-success whiteText\" href=\"hub.php\">My hub</a>
+						<a class=\"nav-link btn btn-theme blackText\" href=\"hub.php\">My hub</a>
 					</li>
 					<li class=\"nav-item signed-in for-collapsed\">
-						<a class=\"nav-link btn btn-success whiteText\" href=\"settings.php\">My Settings</a>
+						<a class=\"nav-link btn btn-theme blackText\" href=\"settings.php\">My Settings</a>
 					</li>
 					<li class=\"nav-item signed-in for-collapsed\">
-						<a class=\"nav-link btn btn-success whiteText\" href=\"signout.php\">Sign out</a>
+						<a class=\"nav-link btn btn-theme blackText\" href=\"signout.php\">Sign out</a>
 					</li>";
 			} else {
 			  echo "<li class=\"nav-item signed-out\">
-						<a class=\"nav-link btn btn-success whiteText\" href=\"#\" data-toggle=\"modal\" data-target=\"#login-modal\">Sign in</a>
+						<a class=\"nav-link btn btn-theme blackText\" href=\"#\" data-toggle=\"modal\" data-target=\"#login-modal\">Sign in</a>
 					</li>
 					<li class=\"nav-item signed-out\">
-						<a class=\"nav-link disabled whiteText for-non-collapsed\" href=\"#\" id=\"nav_or\">or</a>
+						<a class=\"nav-link disabled blackText for-non-collapsed\" href=\"#\" id=\"nav_or\">or</a>
 					</li>
 					<li class=\"nav-item signed-out\">
-						<a class=\"nav-link btn btn-success whiteText\" href=\"signup.php\">Sign up</a>
+						<a class=\"nav-link btn btn-theme blackText\" href=\"signup.php\">Sign up</a>
 					</li>";
 			}
 		  ?>
@@ -125,7 +125,7 @@
 <!-- Log in modal -->
 <div class="modal" tabindex="-1" role="dialog" id="login-modal">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
+    <div class="modal-content bg-dark themeText">
       <form action="index.php" method="post">
 		  <div class="modal-header">
 			<h5 class="modal-title">Sign in</h5>
@@ -134,7 +134,7 @@
 			</button>
 		  </div>
 		  <div class="modal-body" id="login-form">
-			  <div class="form-group">
+			  <div class="form-group textTheme">
 				<label for="email">Email address</label>
 				<input type="email" class="form-control" id="email" placeholder="Enter email" id="login-email" name="login-email" required>
 			  </div>
@@ -142,7 +142,7 @@
 				<label for="password">Password</label>
 				<input type="password" class="form-control" id="password" placeholder="Password"  id="login-password" name="login-password" required>
 			  </div>
-			  <div class="form-check">
+			  <div class="form-check textTheme">
 				<input class="form-check-input" type="checkbox" value="" id="login-rememberme" name="login-rememberme">
 				<label class="form-check-label" for="rememberme">
 					Remember me
@@ -150,8 +150,8 @@
 			</div>
 		  </div>
 		  <div class="modal-footer">
-			<button type="submit" class="btn btn-success" name='signin' onclick="form_submit()">Sign in</button>
-			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="submit" class="btn btn-theme" name='signin' onclick="form_submit()">Sign in</button>
+			<button type="button" class="btn btn-theme" data-dismiss="modal">Cancel</button>
 		  </div>
 	  </form>
     </div>
@@ -159,7 +159,7 @@
 </div>
 
 <!-- Page content -->
-<div class="jumbotron jumbotron-fluid bg-white">
+<div class="jumbotron jumbotron-fluid bg-dark themeText">
   <div class="container">
     <h1 class="display-2">Placeholder</h1>
     <h2 class="display-8">You will never run out of the things you rely on ever again.</h2>
@@ -169,10 +169,10 @@
 	<div class="row">
 	<div class="col-xs-12 col-md-6">
 		<div class="card text-center" id="cards-items">
-			<div class="card-header bg-success">
-				<h3 class="whiteText">Never run out of ________</h3>
+			<div class="card-header bg-theme">
+				<h3 class="blackText">Never run out of ________</h3>
 			</div>
-			<div class="card-body">
+			<div class="card-body bg-dark themeText">
 				<p class="card-text">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 				</p>
@@ -181,11 +181,11 @@
 	</div>
 	<div class="col-xs-12 col-md-6">
 		<div class="card text-center" id="cards-hub">
-			<div class="card-header bg-success">
-				<h3 class="whiteText">Your hub</h3>
+			<div class="card-header bg-theme">
+				<h3 class="blackText">Your hub</h3>
 			</div>
-			<div class="card-body">
-				<p class="card-text">
+			<div class="card-body bg-dark">
+				<p class="card-text themeText">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 				</p>
 			</div>

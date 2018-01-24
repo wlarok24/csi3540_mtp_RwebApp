@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<!-- stylesheets and javascripts imports -->
 	  <link rel="stylesheet" href="css/bootstrap.min.css">
-	  <link rel="stylesheet" href="css/navbar.css">
+	  <link rel="stylesheet" href="css/theme.css">
 	  <link rel="stylesheet" href="css/signup.css">
 	  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 		  rel="stylesheet">-->
@@ -13,10 +13,10 @@
 	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
 </head>
-<body>
+<body class="bg-dark themeText">
 <!-- Navigation bar -->
-<nav class="navbar navbar-expand-md bg-success navbar-dark">
-	<a class="navbar-brand" href="index.php">Placeholder Title</a>
+<nav class="navbar navbar-expand-md bg-theme navbar-light">
+	<a class="navbar-brand" href="index.html">Placeholder Title</a>
 	<!-- The user is signing up and shouldn't see the rest of the nav bar -->
 	<!--<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -91,7 +91,7 @@
 				I agree that the data submitted to this site can be anonymously used for statistical purposes.
 			</label>
 		</div>
-		<button type="submit" class="btn btn-success center-xs" name='signup'>Sign up</button>
+		<button type="submit" class="btn btn-theme center-xs" name='signup'>Sign up</button>
 	</form>
 </div>
 </body>
