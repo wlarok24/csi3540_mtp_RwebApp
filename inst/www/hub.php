@@ -63,41 +63,41 @@
 	</div>
 </nav>
 
-<!-- Add ingredient modal -->
-<div class="modal" tabindex="-1" role="dialog" id="ingredient-modal">
+<!-- Add item modal -->
+<div class="modal" tabindex="-1" role="dialog" id="item-modal">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content bg-dark themeText">
+    <div class="modal-content bg-dark whiteText">
       <form action="index.php" method="post">
 		  <div class="modal-header">
-			<h5 class="modal-title">Sign in</h5>
+			<h5 class="modal-title">Add an item</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
 		  </div>
-		  <div class="modal-body" id="ingredient-form">
-			  <div class="form-group textTheme">
-				<label for="ingredient-name">Ingredient name</label>
-				<input type="text" class="form-control" placeholder="Enter Name" id="ingredient-name" name="ingredient-name" required>
+		  <div class="modal-body" id="item-form">
+			  <div class="form-group whiteText">
+				<label for="item-name">Item name</label>
+				<input type="text" class="form-control bg-dark" placeholder="Enter Name" id="item-name" name="item-name" required>
 			  </div>
-			  <div class="form-group textTheme">
-				<label for="ingredient-unit">Unit of measurement</label>
-				<input type="text" class="form-control" placeholder="Enter unit (unit, mL, g, etc)" id="ingredient-unit" name="ingredient-unit" required>
+			  <div class="form-group whiteText">
+				<label for="item-unit">Unit of measurement</label>
+				<input type="text" class="form-control bg-dark" placeholder="Enter unit (unit, mL, g, etc)" id="item-unit" name="item-unit" required>
 			  </div>
-			  <div class="form-group textTheme">
-				<label for="ingredient-size">Usual use size</label>
-				<input type="number" class="form-control" placeholder="Enter usual use size" id="ingredient-size" name="ingredient-size" required>
+			  <div class="form-group whiteText">
+				<label for="item-size">Usual use size</label>
+				<input type="number" class="form-control bg-dark" placeholder="Enter usual use size" id="item-size" name="item-size" required>
 			  </div>
-			  <div class="form-group textTheme">
-				<label for="ingredient-inventory">Usual use size</label>
-				<input type="number" class="form-control" placeholder="Enter your current inventory" id="ingredient-inventory" name="ingredient-inventory" required>
+			  <div class="form-group whiteText">
+				<label for="item-inventory">Usual use size</label>
+				<input type="number" class="form-control bg-dark" placeholder="Enter your current inventory" id="item-inventory" name="item-inventory" required>
 			  </div>
-			  <div class="form-group textTheme">
-				<label for="ingredient-estimate">Estimated daily use</label>
-				<input type="number" class="form-control" placeholder="Enter your estimated daily use" id="ingredient-estimate" name="ingredient-estimate" required>
+			  <div class="form-group whiteText">
+				<label for="item-estimate">Estimated daily use</label>
+				<input type="number" class="form-control bg-dark" placeholder="Enter your estimated daily use" id="item-estimate" name="item-estimate" required>
 			  </div>
 		  </div>
 		  <div class="modal-footer">
-			<button type="submit" class="btn btn-theme" name='add-ingredient' onclick="form_submit()">Add ingredient</button>
+			<button type="submit" class="btn btn-theme" name='add-item' onclick="form_submit()">Add item</button>
 			<button type="button" class="btn btn-theme" data-dismiss="modal">Cancel</button>
 		  </div>
 	  </form>
@@ -114,7 +114,7 @@
 			<div class="card-header bg-theme">
 				<h3 class="blackText" id="inventory">Inventory</h3>
 			</div>
-			<div class="card-body bg-dark themeText">
+			<div class="card-body bg-dark whiteText">
 				<form action="" method="post"><table class="table">
 					<thead><tr>
 						<th>Item</th>
@@ -123,9 +123,9 @@
 						<th>Today's use</th>
 					</tr></thead>
 					<tbody>
-					<tr><td>Patatoes</td><td>20 units</td><td>2 units</td><td><input type="number" class="form-control" id="Patatoes" name="Patatoes" value=0 required></td></tr>
-					<tr><td>Yogurt</td><td>3000 mL</td><td>200 mL</td><td><input type="number" class="form-control" id="Yogurt" name="Yogurt" value=0 required></td></tr>
-					<tr><td>Toilet paper</td><td>48 units</td><td>1 units</td><td><input type="number" class="form-control" id="Toilet_paper" name="Toilet_paper" value=0 required></td></tr>
+					<tr><td>Patatoes</td><td>20 units</td><td>2 units</td><td><input type="number" class="form-control bg-dark" id="Patatoes" name="Patatoes" value=0 required></td></tr>
+					<tr><td>Yogurt</td><td>3000 mL</td><td>200 mL</td><td><input type="number" class="form-control bg-dark" id="Yogurt" name="Yogurt" value=0 required></td></tr>
+					<tr><td>Toilet paper</td><td>48 units</td><td>1 units</td><td><input type="number" class="form-control bg-dark" id="Toilet_paper" name="Toilet_paper" value=0 required></td></tr>
 					</tbody>
 					<tfoot><tr>
 						<th>Item</th>
@@ -135,8 +135,8 @@
 					</tr></tfoot>
 				</table>
 				<div class="btn-group">
-					<button type="button" class="btn btn-theme" name='add_ingredient' id='add_ingredient' data-toggle="modal" data-target="#ingredient-modal">Add</button>
-					<button type="button" class="btn btn-theme" name='remove_ingredient' id='remove_ingredient'>Remove</button>
+					<button type="button" class="btn btn-theme" name='add_item' id='add_item' data-toggle="modal" data-target="#item-modal">Add</button>
+					<button type="button" class="btn btn-theme" name='remove_item' id='remove_item' onclick="swal('Hello', '...',  'info');">Remove</button>
 					<button type="button" class="btn btn-theme" name='submit_use' id='submit_use'>Submit use</button>
 				</div>
 				</form>
@@ -148,7 +148,7 @@
 			<div class="card-header bg-theme">
 				<h3 class="blackText" id="graph">Graph reports</h3>
 			</div>
-			<div class="card-body bg-dark themeText">
+			<div class="card-body bg-dark whiteText">
 			</div>
 		</div>
 	</div>

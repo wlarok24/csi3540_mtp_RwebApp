@@ -16,11 +16,11 @@ body {
 .blackText {
 	color : rgb(0,0,0) !important;
 }
-.themeText {
-	color : rgb(0,204,255) !important;
-}
 .navclass.blackText:hover, .navclass.blackText:focus {
 	color : rgba(0,0,0, 0.75) !important;
+}
+.themeText {
+	color : rgb(0,204,255) !important;
 }
 .bg-theme {
 	background-color : rgb(0,204,255) !important;
@@ -31,6 +31,9 @@ body {
 .bg-dark{
 	background-color : #222222 !important;
 }
+
+/* Dropdown or buttons */
+
 .dropdown-menu, .dropdown-item {
 	background-color : rgb(0,204,255) !important;
 	color : rgb(0,0,0) !important;
@@ -56,6 +59,9 @@ body {
 	border-color : #222222;
 	color : rgb(0,204,255);
 }
+
+/* Cards */
+
 .card {
 	border : 2px solid #00ccff;
 }
@@ -63,6 +69,9 @@ body {
 	border-top-left-radius : 0px !important;
 	border-top-right-radius : 0px !important;
 }
+
+/* Tables */
+
 .table td, .table th{
 	text-align : center;
 	vertical-align : middle;
@@ -70,8 +79,31 @@ body {
 	border-bottom : 1px solid #00ccff;
 }
 .table thead th, .table tfoot th{
+	text-align : center;
+	vertical-align : middle;
 	border-top : 2px solid #00ccff;
 	border-bottom : 2px solid #00ccff;
+}
+
+/* input */
+.form-control.bg-dark {
+	color : #ffffff;
+	border-color : #00ccff;
+}
+.form-control.bg-dark::-webkit-input-placeholder {
+	color : rgba(0,204,255,0.5);
+}
+.form-control.bg-dark:-moz-placeholder {
+	color : rgba(0,204,255,0.5);
+}
+.form-control.bg-dark::-moz-placeholder {
+	color : rgba(0,204,255,0.5);
+}
+.form-control.bg-dark:-ms-input-placeholder {
+	color : rgba(0,204,255,0.5);
+}
+.form-control.bg-dark::-ms-input-placeholder {
+	color : rgba(0,204,255,0.5);
 }
 
 /* Navbar */

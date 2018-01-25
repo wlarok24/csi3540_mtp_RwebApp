@@ -13,10 +13,10 @@
 	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
 </head>
-<body class="bg-dark themeText">
+<body class="bg-dark whiteText">
 <!-- Navigation bar -->
 <nav class="navbar navbar-expand-md bg-theme navbar-light">
-	<a class="navbar-brand" href="index.html">Placeholder Title</a>
+	<a class="navbar-brand" href="index.php">Placeholder Title</a>
 	<!-- The user is signing up and shouldn't see the rest of the nav bar -->
 	<!--<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -71,19 +71,19 @@
 	<form action="" method="post">
 		<div class="form-group row">
 			<label for="name" class="col-sm-4">Your name</label>
-			<input type="text" class="form-control col-sm-8" id="name" name="name" placeholder="Enter your name" required>
+			<input type="text" class="form-control bg-dark col-sm-8" id="name" name="name" placeholder="Enter your name" required>
 		</div>
 		<div class="form-group row">
 			<label for="email" class="col-sm-4">Your email address</label>
-			<input type="email" class="form-control col-sm-8" id="email" name="email" placeholder="Enter your email" required>
+			<input type="email" class="form-control bg-dark col-sm-8" id="email" name="email" placeholder="Enter your email" required>
 		</div>
 		<div class="form-group row">
 			<label for="password" class="col-sm-4">Your password</label>
-			<input type="password" class="form-control col-sm-8" id="password" name="password" placeholder="Password" required>
+			<input type="password" class="form-control bg-dark col-sm-8" id="password" name="password" placeholder="Password" required>
 		</div>
 		<div class="form-group row">
 			<label for="password" class="col-sm-4">Repeat your password</label>
-			<input type="password" class="form-control col-sm-8" id="passwordRepeat" name="passwordRepeat" placeholder="Password" required>
+			<input type="password" class="form-control bg-dark col-sm-8" id="passwordRepeat" name="passwordRepeat" placeholder="Password" required>
 		</div>
 		<div class="form-check">
 			<input class="form-check-input" type="checkbox" value="" id="datawaiver" name="datawaiver" required>

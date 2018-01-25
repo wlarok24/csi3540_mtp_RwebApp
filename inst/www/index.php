@@ -13,7 +13,7 @@
 	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
 </head>
-<body class="bg-dark">
+<body class="bg-dark whiteText">
 <?php
 	$message = "";
 	session_start();
@@ -125,7 +125,7 @@
 <!-- Log in modal -->
 <div class="modal" tabindex="-1" role="dialog" id="login-modal">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content bg-dark themeText">
+    <div class="modal-content bg-dark whiteText">
       <form action="index.php" method="post">
 		  <div class="modal-header">
 			<h5 class="modal-title">Sign in</h5>
@@ -134,15 +134,15 @@
 			</button>
 		  </div>
 		  <div class="modal-body" id="login-form">
-			  <div class="form-group textTheme">
+			  <div class="form-group whiteText">
 				<label for="email">Email address</label>
-				<input type="email" class="form-control" id="email" placeholder="Enter email" id="login-email" name="login-email" required>
+				<input type="email" class="form-control bg-dark" id="email" placeholder="Enter email" id="login-email" name="login-email" required>
 			  </div>
 			  <div class="form-group">
 				<label for="password">Password</label>
-				<input type="password" class="form-control" id="password" placeholder="Password"  id="login-password" name="login-password" required>
+				<input type="password" class="form-control bg-dark bg-dark" id="password" placeholder="Password"  id="login-password" name="login-password" required>
 			  </div>
-			  <div class="form-check textTheme">
+			  <div class="form-check whiteText">
 				<input class="form-check-input" type="checkbox" value="" id="login-rememberme" name="login-rememberme">
 				<label class="form-check-label" for="rememberme">
 					Remember me
@@ -162,7 +162,7 @@
 <div class="jumbotron jumbotron-fluid bg-dark themeText">
   <div class="container">
     <h1 class="display-2">Placeholder</h1>
-    <h2 class="display-8">You will never run out of the things you rely on ever again.</h2>
+    <h2 class="display-8 whiteText">You will never run out of the things you rely on ever again.</h2>
   </div>
 </div>
 <div class="container-fluid">
@@ -172,7 +172,7 @@
 			<div class="card-header bg-theme">
 				<h3 class="blackText">Never run out of ________</h3>
 			</div>
-			<div class="card-body bg-dark themeText">
+			<div class="card-body bg-dark whiteText">
 				<p class="card-text">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 				</p>
@@ -184,8 +184,8 @@
 			<div class="card-header bg-theme">
 				<h3 class="blackText">Your hub</h3>
 			</div>
-			<div class="card-body bg-dark">
-				<p class="card-text themeText">
+			<div class="card-body bg-dark whiteText">
+				<p class="card-text">
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 				</p>
 			</div>
