@@ -11,6 +11,10 @@
 		unset($_COOKIE['user_email']);
 		setcookie('user_email', '', time() - 3600); // empty value and old timestamp, thus browser will delete
 	}
+	if (isset($_COOKIE['user_id'])) {
+		unset($_COOKIE['user_id']);
+		setcookie('user_id', '', time() - 3600); // empty value and old timestamp, thus browser will delete
+	}
 ?>
 <!DOCTYPE html>
 <html>

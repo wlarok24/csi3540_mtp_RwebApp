@@ -30,7 +30,7 @@
 			if ($conn->connect_error) {
 				die("Connection failed: " . $conn->connect_error);
 			} 
-			$query = "SELECT name, email, salt, password FROM user where email = '" . $_POST['login-email'] . "'";
+			$query = "SELECT id, name, email, salt, password FROM user where email = '" . $_POST['login-email'] . "'";
 			$user = mysqli_fetch_array(mysqli_query($conn, $query));
 			if($user){ //query got a valid user
 				$hashed_password = strval(hash("sha256", $_POST['login-password'] . $user['salt'], FALSE));
@@ -38,12 +38,14 @@
 					//user provided the correct password
 					$_SESSION["user_name"] = $user['name'];
 					$_SESSION["user_email"] = $user['email'];
+					$_SESSION["user_id"] = $user['id'];
 					
 					//Remember me 
 					if(isset($_POST['login-rememberme'])){
 						//Create cookies (expire in a year)
 						setcookie("user_name", $user['name'], time() + (365*24*60*60));
 						setcookie("user_email", $user['email'], time() + (365*24*60*60));
+						setcookie("user_id", $user['id'], time() + (365*24*60*60));
 					} else {
 						//Delete cookies
 						if (isset($_COOKIE['user_name'])) {
@@ -53,6 +55,10 @@
 						if (isset($_COOKIE['user_email'])) {
 							unset($_COOKIE['user_email']);
 							setcookie('user_email', '', time() - 3600); // empty value and old timestamp, thus browser will delete
+						}
+						if (isset($_COOKIE['user_id'])) {
+							unset($_COOKIE['user_id']);
+							setcookie('user_id', '', time() - 3600); // empty value and old timestamp, thus browser will delete
 						}
 					}
 				} else {

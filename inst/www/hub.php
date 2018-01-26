@@ -29,6 +29,7 @@
 				if (isset($_COOKIE['user_name']) && isset($_COOKIE['user_email'])){
 					$_SESSION["user_name"] = $_COOKIE['user_name'];
 					$_SESSION["user_email"] = $_COOKIE['user_email'];
+					$_SESSION["user_id"] = $_COOKIE['user_id'];
 				}
 			}
 			//Now check session data for a logged in user
@@ -136,7 +137,7 @@
 				</table>
 				<div class="btn-group">
 					<button type="button" class="btn btn-theme" name='add_item' id='add_item' data-toggle="modal" data-target="#item-modal">Add</button>
-					<button type="button" class="btn btn-theme" name='remove_item' id='remove_item' onclick="swal('Hello', '...',  'info');">Remove</button>
+					<button type="button" class="btn btn-theme" name='remove_item' id='remove_item'>Remove</button>
 					<button type="button" class="btn btn-theme" name='submit_use' id='submit_use'>Submit use</button>
 				</div>
 				</form>
