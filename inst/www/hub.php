@@ -12,6 +12,7 @@
 	  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
+	  <script type="text/javascript" src="js/hub.js"></script>
 </head>
 <body class="bg-dark themeText">
 <!-- Navigation bar -->
@@ -89,16 +90,17 @@
 				<input type="number" class="form-control bg-dark" placeholder="Enter usual use size" id="item-size" name="item-size" required>
 			  </div>
 			  <div class="form-group whiteText">
-				<label for="item-inventory">Usual use size</label>
+				<label for="item-inventory">Inventory</label>
 				<input type="number" class="form-control bg-dark" placeholder="Enter your current inventory" id="item-inventory" name="item-inventory" required>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-estimate">Estimated daily use</label>
 				<input type="number" class="form-control bg-dark" placeholder="Enter your estimated daily use" id="item-estimate" name="item-estimate" required>
 			  </div>
+			  <input type="hidden" id="user_id" value=<?php echo "\"{$_SESSION["user_id"]}\"";?>>
 		  </div>
 		  <div class="modal-footer">
-			<button type="submit" class="btn btn-theme" name='add-item' onclick="form_submit()">Add item</button>
+			<button type="button" class="btn btn-theme" id='add-item'>Add item</button>
 			<button type="button" class="btn btn-theme" data-dismiss="modal">Cancel</button>
 		  </div>
 	  </form>
@@ -123,10 +125,7 @@
 						<th>Usual use size</th>
 						<th>Today's use</th>
 					</tr></thead>
-					<tbody>
-					<tr><td>Patatoes</td><td>20 units</td><td>2 units</td><td><input type="number" class="form-control bg-dark" id="Patatoes" name="Patatoes" value=0 required></td></tr>
-					<tr><td>Yogurt</td><td>3000 mL</td><td>200 mL</td><td><input type="number" class="form-control bg-dark" id="Yogurt" name="Yogurt" value=0 required></td></tr>
-					<tr><td>Toilet paper</td><td>48 units</td><td>1 units</td><td><input type="number" class="form-control bg-dark" id="Toilet_paper" name="Toilet_paper" value=0 required></td></tr>
+					<tbody id="hub_table_body">
 					</tbody>
 					<tfoot><tr>
 						<th>Item</th>
