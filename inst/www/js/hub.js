@@ -2,8 +2,16 @@
 	JavaScript file for the hub page
 */
 $(document).ready(function(){
-	$.ajax({
-		url : "/api/items.php?user_id=" + $('#user_id').val(),
+	var id, token;
+	if (sessionStorage.length > 0){ 
+		id = sessionStorage.getItem("user_id");
+		token = sessionStorage.getItem("user_token");
+	} else {
+		id = localStorage.getItem("user_id");
+		token = localStorage.getItem("user_token");
+	}
+	 $.ajax({
+		url : "/api/items.php?user_id=" + id + "&user_token=" + token,
 		method : 'GET',
 		cache : false,
 		context : document.body,
@@ -32,9 +40,9 @@ $(document).ready(function(){
 			  text:
 				"Are you sure you want to remove " + radio_checked.data("name")+ "?",
 			  showLoaderOnConfirm: true
-			}).then(() => {//Confirm 
+			}).then(() => {//Confirm
 				 $.ajax({
-					url : "/api/items.php?user_id=" + $('#user_id').val() + "&item_id=" + radio_checked.data("id"),
+					url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + radio_checked.data("id"),
 					method : 'DELETE',
 					cache : false,
 					context : document.body,
@@ -74,7 +82,7 @@ $(document).ready(function(){
 		} else {
 			//Make ajax call to hubAjaxHandler
 			$.ajax({
-				url : "/api/items.php?user_id=" + $('#user_id').val(),
+				url : "/api/items.php?user_id=" + id + "&user_token=" + token,
 				method : 'POST',
 				cache : false,
 				context : document.body,

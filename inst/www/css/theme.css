@@ -113,14 +113,8 @@ body {
 }
 @media (max-width:768px){
 	/* this is the width at which the navbar collapses */
-	.for-non-collapsed{
+	#nav_or{
 		display: none;
-	}
-}
-@media (min-width:768px){
-	/* this is the width at which the navbar collapses */
-	.for-collapsed{
-		display : none;
 	}
 }
 

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Placeholder - Sign up</title>
+	<meta charset="utf-8">
+	<!-- stylesheets and javascripts imports -->
+	  <link rel="stylesheet" href="css/bootstrap.min.css">
+	  <link rel="stylesheet" href="css/theme.css">
+	  <link rel="stylesheet" href="css/signup.css">
+	  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+		  rel="stylesheet">-->
+	  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
+	  <script type="text/javascript" src="js/signup.js"></script>
+</head>
+<body class="bg-dark whiteText">
+<!-- Navigation bar -->
+<nav class="navbar navbar-expand-md bg-theme navbar-light">
+	<a class="navbar-brand" href="index.html">Placeholder Title</a>
+	<!-- The user is signing up and shouldn't see the rest of the nav bar -->
+	<!--<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+		<ul class="navbar-nav">
+		</ul>
+	</div>-->
+</nav>
+
+<!-- Page content -->
+<div class="container-fluid">
+	<h1 class="center-xs">Sign up</h1>
+	<form>
+		<div class="form-group row">
+			<label for="name" class="col-sm-4">Your name</label>
+			<input type="text" class="form-control bg-dark col-sm-8" id="signup_name" name="name" placeholder="Enter your name" required>
+		</div>
+		<div class="form-group row">
+			<label for="email" class="col-sm-4">Your email address</label>
+			<input type="email" class="form-control bg-dark col-sm-8" id="signup_email" name="email" placeholder="Enter your email" required>
+		</div>
+		<div class="form-group row">
+			<label for="password" class="col-sm-4">Your password</label>
+			<input type="password" class="form-control bg-dark col-sm-8" id="signup_password" name="password" placeholder="Password" required>
+		</div>
+		<div class="form-group row">
+			<label for="password" class="col-sm-4">Repeat your password</label>
+			<input type="password" class="form-control bg-dark col-sm-8" id="signup_passwordRepeat" name="passwordRepeat" placeholder="Password" required>
+		</div>
+		<div class="form-check">
+			<input class="form-check-input" type="checkbox" value="" id="signup_datawaiver" name="datawaiver" required>
+			<label class="form-check-label" for="datawaiver">
+				I agree that the data submitted to this site can be anonymously used for statistical purposes.
+			</label>
+		</div>
+		<button type="button" class="btn btn-theme center-xs" id='signup'>Sign up</button>
+	</form>
+</div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Placeholder - My Settings</title>
+	<meta charset="utf-8">
+	<!-- stylesheets and javascripts imports -->
+	  <link rel="stylesheet" href="css/bootstrap.min.css">
+	  <link rel="stylesheet" href="css/theme.css">
+	  <link rel="stylesheet" href="css/settings.css">
+	  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+		  rel="stylesheet">-->
+	  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
+	  <script type="text/javascript" src="js/session.js"></script>
+	  <script type="text/javascript" src="js/settings.js"></script>
+</head>
+<body class="bg-dark whiteText">
+<!-- Navigation bar -->
+<nav class="navbar navbar-expand-md bg-theme navbar-light fixed-top">
+	<a class="navbar-brand" href="index.html">Placeholder Title</a>
+	<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+		<ul class="navbar-nav">
+			<li class="nav-item signed-in">
+				<a class="nav-link btn btn-theme blackText" href="hub.html">My hub</a>
+			</li>
+			<li class="nav-item signed-in">
+				<a class="nav-link btn btn-theme blackText" href="signout.html">Sign out</a>
+			</li>
+			<li class="nav-item signed-out">
+				<a class="nav-link btn btn-theme blackText" href="#" data-toggle="modal" data-target="#login-modal">Sign in</a>
+			</li>
+			<li class="nav-item signed-out">
+				<a class="nav-link disabled blackText" href="#" id="nav_or">or</a>
+			</li>
+			<li class="nav-item signed-out">
+				<a class="nav-link btn btn-theme blackText" href="signup.html">Sign up</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+<!-- Page content -->
+<h1 id="myhub" class="title">My settings</h1>
+<div class="container-fluid extra-padding" id="card_container">
+	<div class="row">
+	<div class="col-12">
+		<div class="card text-center" id="cards-items">
+			<div class="card-header bg-theme">
+				<h3 class="blackText">Change your password</h3>
+			</div>
+			<div class="card-body bg-dark  whiteText" id="collapseOne" class="collapse show">
+				<form>
+					<div class="form-group row">
+						<label for="old_parent" class="col-sm-4">Your old password</label>
+						<input type="password" class="form-control bg-dark col-sm-8" id="old_password" name="old_password" placeholder="Your old password" required>
+					</div>
+					<div class="form-group row">
+						<label for="password" class="col-sm-4">Your new password</label>
+						<input type="password" class="form-control bg-dark col-sm-8" id="new_password" name="new_password" placeholder="Your new password" required>
+					</div>
+					<div class="form-group row">
+						<label for="password" class="col-sm-4">Repeat your new password</label>
+						<input type="password" class="form-control bg-dark col-sm-8" id="new_passwordRepeat" name="new_passwordRepeat" placeholder="Your new password again" required>
+					</div>
+					<button type="button" class="btn btn-theme" id='submit_new_password'>Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col-12">
+		<div class="card text-center" id="cards-hub">
+			<div class="card-header bg-theme">
+				<h3 class="blackText">Add additional information</h3>
+			</div>
+			<div class="card-body bg-dark  whiteText">
+				<b class="">Note : the information is for statistical purposes only</b>
+				<form action="" method="post">
+				
+				<button type="submit" class="btn btn-theme" name='submit_new_password'>Submit</button>
+				</form>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+</body>
+</html>
