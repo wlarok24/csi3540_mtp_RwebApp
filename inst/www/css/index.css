@@ -29,6 +29,11 @@ ul {
 	text-align: left;
 }
 /* Modal */
+#signup_div{
+	border-top : 2px solid #00ccff;
+	margin-top : 15px;
+	padding-top : 15px;
+}
 .close
 {
 	color : rgb(0,204,255) !important;
