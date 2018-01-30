@@ -4,12 +4,12 @@
 $(document).ready(function(){
 	if(sessionStorage.length > 0){
 		//User is signed in
-		$("#navbarDropdownMenuLink").html(sessionStorage.getItem("user_name"));
+		$("#navMenuButton").html(sessionStorage.getItem("user_name"));
 		$(".signed-in").show();
 		$(".signed-out").hide();
 	} else if (localStorage.length > 0){
 		//User is signed in (with remember me)
-		$("#navbarDropdownMenuLink").html(localStorage.getItem("user_name"));
+		$("#navMenuButton").html(localStorage.getItem("user_name"));
 		$(".signed-in").show();
 		$(".signed-out").hide();
 	} else {

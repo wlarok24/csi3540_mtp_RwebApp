@@ -17,21 +17,23 @@
 </head>
 <body class="bg-dark whiteText">
 <!-- Navigation bar -->
-<nav class="navbar navbar-expand-md bg-theme navbar-light fixed-top">
+<nav class="navbar navbar-expand bg-theme navbar-light fixed-top">
 	<a class="navbar-brand" href="">Placeholder Title</a>
 	<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
 	<div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 		<ul class="navbar-nav">
-			<li class="nav-item signed-in">
-				<a class="nav-link btn btn-theme blackText" href="hub.html">My hub</a>
-			</li>
-			<li class="nav-item signed-in">
-				<a class="nav-link btn btn-theme blackText" href="settings.html">My Settings</a>
-			</li>
-			<li class="nav-item signed-in">
-				<a class="nav-link btn btn-theme blackText" type="button" id="signout">Log out</a>
+			<!-- Note that the dropdown and the log in will never appear both a the same time on the site -->
+			<li class="nav-item dropdown signed-in">
+			  <a class="nav-link btn btn-theme blackText dropdown-toggle" type="button" id="navMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Your name (if signed in)
+			  </a>
+			  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navMenuButton">
+				<a class="dropdown-item" href="hub.html">My hub</a>
+				<a class="dropdown-item" href="settings.html">My Settings</a>
+				<a class="dropdown-item" href="signout.html">Log out</a>
+			  </div>
 			</li>
 			<li class="nav-item signed-out">
 				<a class="nav-link btn btn-theme blackText" href="#" data-toggle="modal" data-target="#login-modal">Log in</a>
