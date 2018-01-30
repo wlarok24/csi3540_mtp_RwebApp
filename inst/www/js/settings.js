@@ -6,12 +6,18 @@ $(document).ready(function(){
 	if (sessionStorage.length > 0){ 
 		id = sessionStorage.getItem("user_id");
 		token = sessionStorage.getItem("user_token");
-	} else {
+	} else if (localStorage.length > 0){
 		id = localStorage.getItem("user_id");
 		token = localStorage.getItem("user_token");
 	}
 	$("#submit_new_password").click(function(){
-		
+		if (($("#old_password").val() == "")||($("#new_password").val() == "")||($("#new_passwordRepeat").val() == "")){
+			swal( "Error", "Please fill out all the fields.", "error");
+			return;
+		} else if ($("#new_password").val() != $("#new_passwordRepeat").val()){
+			swal("Error", "The two new password fields don't match.", "error");
+			return;
+		}
 		$.ajax({
 			url : "/api/accounts.php?op=changepwd",
 			method : 'POST',

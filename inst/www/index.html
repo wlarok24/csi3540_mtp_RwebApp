@@ -31,16 +31,10 @@
 				<a class="nav-link btn btn-theme blackText" href="settings.html">My Settings</a>
 			</li>
 			<li class="nav-item signed-in">
-				<a class="nav-link btn btn-theme blackText" type="button" id="signout">Sign out</a>
+				<a class="nav-link btn btn-theme blackText" type="button" id="signout">Log out</a>
 			</li>
 			<li class="nav-item signed-out">
-				<a class="nav-link btn btn-theme blackText" href="#" data-toggle="modal" data-target="#login-modal">Sign in</a>
-			</li>
-			<li class="nav-item signed-out">
-				<a class="nav-link disabled blackText" href="#" id="nav_or">or</a>
-			</li>
-			<li class="nav-item signed-out">
-				<a class="nav-link btn btn-theme blackText" href="signup.html">Sign up</a>
+				<a class="nav-link btn btn-theme blackText" href="#" data-toggle="modal" data-target="#login-modal">Log in</a>
 			</li>
 		</ul>
 	</div>
@@ -51,12 +45,13 @@
     <div class="modal-content bg-dark whiteText">
       <form>
 		  <div class="modal-header">
-			<h5 class="modal-title">Sign in</h5>
+			<h5 class="modal-title">Log in</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			  <span aria-hidden="true">&times;</span>
 			</button>
 		  </div>
-		  <div class="modal-body" id="login-form">
+		  <div class="modal-body">
+			<form id="login-form">
 			  <div class="form-group whiteText">
 				<label for="email">Email address</label>
 				<input type="email" class="form-control bg-dark" id="email" placeholder="Enter email" id="login-email" name="login-email" required>
@@ -70,6 +65,10 @@
 				<label class="form-check-label" for="rememberme">
 					Remember me
 				</label>
+			  </div>
+			</form>
+			<div class="centerText">
+				New user? <a href="signup.html" class="themeText">Sign up here.</a>
 			</div>
 		  </div>
 		  <div class="modal-footer">
@@ -97,7 +96,15 @@
 			</div>
 			<div class="card-body bg-dark whiteText">
 				<p class="card-text">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					This site is based on an algorithm that learns about your consumption of different products and tell you when you will be running out in advance. 
+					<br>Useful for item such as :<ul class="two_col">
+						<li>Onions</li>
+						<li>Peppers</li>
+						<li>Sugar</li>
+						<li>Toilet paper</li>
+						<li>Batteries</li>
+						<li>Air filters</li>
+					</ul>
 				</p>
 			</div>
 		</div>
@@ -109,7 +116,39 @@
 			</div>
 			<div class="card-body bg-dark whiteText">
 				<p class="card-text">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					Your hub is where you can get all the information on your consumption and your items.<br>
+					It is were you can :<ul>
+						<li>Update your daily use of all your items</li>
+						<li>Look at the graph reports</li>
+						<li>Manage your items</li>
+						<li>Update your current inventory</li>
+					</ul>
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-6">
+		<div class="card text-center" id="cards-hub">
+			<div class="card-header bg-theme">
+				<h3 class="blackText">Your data at your discretion</h3>
+			</div>
+			<div class="card-body bg-dark whiteText">
+				<p class="card-text">
+					The more data you give us, the more accurate the models for you and newcomers should become.<br>
+					However, we feel that you should not be forced to give us data that you do not want to give.
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-xs-12 col-md-6">
+		<div class="card text-center" id="cards-hub">
+			<div class="card-header bg-theme">
+				<h3 class="blackText">Privacy</h3>
+			</div>
+			<div class="card-body bg-dark whiteText">
+				<p class="card-text">
+					We take your privacy seriously. Your data will be kept to update your current predictions.<br>
+					If we use your data in any other way, it will be done by removing anything that could identify you.
 				</p>
 			</div>
 		</div>

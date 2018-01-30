@@ -7,6 +7,9 @@
 body {
 	padding-bottom : 15px;
 }
+.centerText{
+	text-align : center;
+}
 .whiteText {
 	color : rgb(255, 255, 255) !important;
 }
