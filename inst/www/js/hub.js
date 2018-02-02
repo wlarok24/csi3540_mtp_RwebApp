@@ -2,14 +2,38 @@
 	JavaScript file for the hub page
 */
 $(document).ready(function(){
-	var id, token;
-	if (sessionStorage.length > 0){ 
+	var id, token, mockHub = false, mockData;
+	if(window.location.href.indexOf("csi3540_mtp_RwebApp/inst/www") != -1){
+		//Offline (For mockups)
+		mockHub = true;
+		var potatoes =[], yogurt = [], tp = [];
+		var today = Date.now();
+		for(var i = 0; i <= 14; i++){
+			potatoes.push([today + i * 24*60*60*1000, Math.ceil(15 - 5/6*i)]);
+			yogurt.push([today + i * 24*60*60*1000, Math.ceil(10 - 0.5*i)]);
+			tp.push([today + i * 24*60*60*1000, Math.ceil(48 - 0.25 * i)]);
+		}
+		mockData = [{
+				label : "Potatoes",
+				data : potatoes,
+				lines : {line : true, fill : false}
+			},{
+				label : "Yogurt",
+				data : yogurt,
+				lines : {line : true, fill : false}
+			}, {
+				label : "Toilet paper",
+				data : tp,
+				lines : {line : true, fill : false}
+			}];
+	} else if (sessionStorage.length > 0){ 
 		id = sessionStorage.getItem("user_id");
 		token = sessionStorage.getItem("user_token");
 	} else {
 		id = localStorage.getItem("user_id");
 		token = localStorage.getItem("user_token");
 	}
+	if(!mockHub){
 	 $.ajax({
 		url : "/api/items.php?user_id=" + id + "&user_token=" + token,
 		method : 'GET',
@@ -28,7 +52,50 @@ $(document).ready(function(){
 		error : function(data){
 			swal("Error", "There was an error during the call.<br>" + data.message, "error");
 		}
-	});
+	 });
+	} else {
+		//Generate mock items
+		$("#hub_table_body").html(""); //Empty the table
+		$("#hub_table_body").html($("#hub_table_body").html() + 
+			"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"potatoes\" data-name=\"potatoes\">" +
+			"Potatoes</td><td>" + 30 + " units</td><td>" + 2 + " units" + 
+			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_potatoes\"  value=0 required></td></tr>"
+		); //add table row for the item
+		$("#hub_table_body").html($("#hub_table_body").html() + 
+			"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"yogurt\" data-name=\"yogurt\">" +
+			"Yogurt</td><td>" + 2500 + " mL</td><td>" + 250 + " mL" + 
+			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_yogurt\"  value=0 required></td></tr>"
+		); //add table row for the item
+		$("#hub_table_body").html($("#hub_table_body").html() + 
+			"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"tp\" data-name=\"Toilet paper\">" +
+			"Toilet paper</td><td>" + 48 + " units</td><td>" + 1 + " units" + 
+			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_tp\"  value=0 required></td></tr>"
+		); //add table row for the item
+		//Draw mock graphs
+		$.plot($("#graphZone"), mockData, {
+			grid : {
+				show : true,
+				color : "#00ccff"
+			}, xaxis : {
+				mode : "time",
+				min : today,
+				max : today + 14*24*60*60*1000,
+				font : {
+					color : "#ffffff"
+				}
+			}, yaxis : {
+				min : 0,
+				font : {
+					color : "#ffffff"
+				}
+			}, legend : { 
+				show : true, 
+				sorted : "ascending",
+				position : "sw",
+				backgroundOpacity : 0.5
+			}
+		});
+	}
 	$("#remove_item").click(function(){
 		var radio_checked = $("input[name='item_radio']:checked");
 		if(radio_checked.length == 1){ //an item is checked
@@ -41,6 +108,7 @@ $(document).ready(function(){
 				"Are you sure you want to remove " + radio_checked.data("name")+ "?",
 			  showLoaderOnConfirm: true
 			}).then(() => {//Confirm
+				if(!mockHub){
 				 $.ajax({
 					url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + radio_checked.data("id"),
 					method : 'DELETE',
@@ -56,7 +124,8 @@ $(document).ready(function(){
 					error : function(){ //Delete unsuccessful
 						swal("Error", "There was an error during the call.<br>" + data.message, "error");
 					}
-				}); 
+				 });
+				}
 			  });
 		} else {
 			swal("Error", "Please check an item.", "error");
@@ -80,6 +149,7 @@ $(document).ready(function(){
 		} else if ($("#item-inventory").val() < 0){
 			swal("Error", "The usual use size and estimated daily use cannot be negative.", "error");
 		} else {
+			if(!mockHub){
 			//Make ajax call to hubAjaxHandler
 			$.ajax({
 				url : "/api/items.php?user_id=" + id + "&user_token=" + token,
@@ -105,6 +175,7 @@ $(document).ready(function(){
 					swal("Error", "There was an error during the call.<br>" + data.message, "error");
 				}
 			});
+			}
 		}
 	});
 });

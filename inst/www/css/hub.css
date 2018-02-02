@@ -10,6 +10,21 @@
 .card {
 	margin : 15px;
 }
+/* For plots */
+.flot {
+	width : 100%; /* Of parent */
+	height : 80vh;
+}
+.legendColorBox > div{ /* To put the square white*/
+	border-color : #ffffff !important;
+	padding:1px
+}
+.legendLabel {
+	color : #ffffff;
+}
+.flot-container {
+	/* in case I need it in the future */
+}
 /* Modal */
 .close
 {
