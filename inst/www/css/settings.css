@@ -1,0 +1,12 @@
+/*
+	Css created for the home page for my site
+	William LaRocque
+*/
+.title{
+	margin-top: 50px;
+	padding-top: 15px;
+	text-align: center;
+}
+.card {
+	margin : 15px;
+}

@@ -1,0 +1,128 @@
+/*
+	Css created for the theme for my site
+	William LaRocque
+*/
+
+/* Theme */
+body {
+	padding-bottom : 15px;
+}
+.centerText{
+	text-align : center;
+}
+.whiteText {
+	color : rgb(255, 255, 255) !important;
+}
+.navclass.whiteText:hover, .navclass.whiteText:focus {
+	color : rgba(255, 255, 255, 0.75) !important;
+}
+.blackText {
+	color : rgb(0,0,0) !important;
+}
+.navclass.blackText:hover, .navclass.blackText:focus {
+	color : rgba(0,0,0, 0.75) !important;
+}
+.themeText {
+	color : rgb(0,204,255) !important;
+}
+.bg-theme {
+	background-color : rgb(0,204,255) !important;
+}
+.bg-white{
+	background-color : #ffffff !important;
+}
+.bg-dark{
+	background-color : #222222 !important;
+}
+
+/* Dropdown or buttons */
+
+.dropdown-menu, .dropdown-item {
+	background-color : rgb(0,204,255) !important;
+	color : rgb(0,0,0) !important;
+}
+.dropdown-item:hover, .dropdown-item:focus {
+	background-color : rgb(13,196,242) !important;
+}
+.btn-theme, btn-theme:visited {
+	background-color : rgb(0,204,255);
+	border-color : rgb(0,204,255); /* The border will not be discernible from the button */
+}
+.btn-theme:hover, .btn-theme:focus{
+	background-color : rgb(13,196,242);
+	border-color : rgb(13,196,242);
+}
+.btn-dark-theme, btn-dark-theme:visited {
+	background-color : #000000;
+	border-color : #000000;
+	color : rgb(0,204,255);
+}
+.btn-dark-theme:hover, .btn-dark-theme:focus{
+	background-color : #222222;
+	border-color : #222222;
+	color : rgb(0,204,255);
+}
+
+/* Cards */
+
+.card {
+	border : 2px solid #00ccff;
+}
+.card-header {
+	border-top-left-radius : 0px !important;
+	border-top-right-radius : 0px !important;
+}
+
+/* Tables */
+
+.table td, .table th{
+	text-align : center;
+	vertical-align : middle;
+	border-top : 1px solid #00ccff;
+	border-bottom : 1px solid #00ccff;
+}
+.table thead th, .table tfoot th{
+	text-align : center;
+	vertical-align : middle;
+	border-top : 2px solid #00ccff;
+	border-bottom : 2px solid #00ccff;
+}
+
+/* input */
+.form-control.bg-dark {
+	color : #ffffff;
+	border-color : #00ccff;
+}
+.form-control.bg-dark::-webkit-input-placeholder {
+	color : rgba(0,204,255,0.5);
+}
+.form-control.bg-dark:-moz-placeholder {
+	color : rgba(0,204,255,0.5);
+}
+.form-control.bg-dark::-moz-placeholder {
+	color : rgba(0,204,255,0.5);
+}
+.form-control.bg-dark:-ms-input-placeholder {
+	color : rgba(0,204,255,0.5);
+}
+.form-control.bg-dark::-ms-input-placeholder {
+	color : rgba(0,204,255,0.5);
+}
+
+/* Navbar */
+.signed-out a{
+	padding-left: 4px !important;
+	padding-right: 4px !important;
+}
+@media (max-width:768px){
+	/* this is the width at which the navbar collapses */
+	#nav_or{
+		display: none;
+	}
+}
+
+/* Common for other pages */
+.extra-padding{
+	padding-left: 30px;
+	padding-right: 30px;
+}

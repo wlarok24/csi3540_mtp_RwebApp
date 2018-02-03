@@ -1,0 +1,21 @@
+/*
+	Css created for the signup page for my site
+	William LaRocque
+*/
+.container-fluid {
+	padding-right: 30px;
+}
+.center-xs {
+	display: block;
+	text-align: center;
+	margin-left : auto;
+	margin-right : auto;
+	margin-bottom : 15px;
+	margin-top : 15px;
+}
+@media (max-width:576px){
+	/* this is the width for xs in Bootstrap */
+	.container-fluid {
+		padding-left : 30px;
+	} 
+}
