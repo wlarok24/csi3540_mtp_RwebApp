@@ -1,6 +1,84 @@
 /*
 	JavaScript file for the hub page
 */
+var hub = hub || {};
+hub.data = [];
+hub.predictionGraphData = [];
+hub.refreshData = function(id, token){
+	$.ajax({
+		url : "/api/items.php?user_id=" + id + "&user_token=" + token,
+		method : 'GET',
+		cache : false,
+		context : document.body,
+		success : function(data){
+			hub.data = data; //Refresh data
+			$("#hub_table_body").html(""); //Empty the table
+			for(var i = 0; i < data.length; i++){
+				$("#hub_table_body").html($("#hub_table_body").html() + 
+					"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"" + data[i].id + "\" data-name=\"" + data[i].name + "\">" +
+					data[i].name + "</td><td>" + data[i].inventory + " " +  data[i].unit + "</td><td>" + data[i].usual_use_size + " " +  data[i].unit + 
+					"</td><td><input type=\"number\" class=\"form-control bg-dark item_use\" id=\"item_use_" + data[i].id + "\"  data-id=\"" + data[i].id + "\" data-pos=\"" + i + "\" value=0></td></tr>"
+				); //add table row for the item
+				//Prep graph data
+				var itemGraphData = [];
+				var today = Date.now();
+				for(var j = 0; j <= 14; j++){
+					itemGraphData.push([today + j * 24*60*60*1000, Math.ceil(data[i].inventory/data[i].usual_use_size - data[i].model/data[i].usual_use_size*j)]);
+				}
+				hub.predictionGraphData.push({
+					label : data[i].name,
+					data : itemGraphData,
+					lines : {line : true, fill : false}
+				});
+				hub.getTodaysItemUse(id, token, data[i].id);
+			}
+			//Draw graph
+			$.plot($("#graphZone"), hub.predictionGraphData, {
+				grid : {
+					show : true,
+					color : "#00ccff"
+				}, xaxis : {
+					mode : "time",
+					min : today,
+					max : today + 14*24*60*60*1000,
+					font : {
+						color : "#ffffff"
+					}
+				}, yaxis : {
+					min : 0,
+					font : {
+						color : "#ffffff"
+					}
+				}, legend : { 
+					show : true, 
+					sorted : "ascending",
+					position : "sw",
+					backgroundOpacity : 0.5
+				}
+			});
+		},
+		error : function(data){
+			swal("Error", "There was an error during the call.<br>" + data.message, "error");
+		}
+	});
+};
+hub.getTodaysItemUse = function(id, token, item_id){
+	$.ajax({
+		url : "/api/itemUse.php?user_id=" + id + "&user_token=" + token + "&op=today&item_id=" + item_id,
+		method : 'GET',
+		cache : false,
+		context : document.body,
+		success : function(data){
+			for(var i = 0; i < data.length; i++){
+				//Update item use
+				$("#item_use_" + data[i].item_id).value(data[i].qty);
+			}
+		},
+		error : function(data){
+			swal("Error", "There was an error during the call.<br>" + data.message, "error");
+		}
+	});
+};
 $(document).ready(function(){
 	var id, token, mockHub = false, mockData;
 	if(window.location.href.indexOf("csi3540_mtp_RwebApp/inst/www") != -1){
@@ -34,42 +112,24 @@ $(document).ready(function(){
 		token = localStorage.getItem("user_token");
 	}
 	if(!mockHub){
-	 $.ajax({
-		url : "/api/items.php?user_id=" + id + "&user_token=" + token,
-		method : 'GET',
-		cache : false,
-		context : document.body,
-		success : function(data){
-			$("#hub_table_body").html(""); //Empty the table
-			for(var i = 0; i < data.length; i++){
-				$("#hub_table_body").html($("#hub_table_body").html() + 
-					"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"" + data[i].id + "\" data-name=\"" + data[i].name + "\">" +
-					data[i].name + "</td><td>" + data[i].inventory + " " +  data[i].unit + "</td><td>" + data[i].usual_use_size + " " +  data[i].unit + 
-					"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_" + data[i].id + "\"  value=0 required></td></tr>"
-				); //add table row for the item
-			}
-		},
-		error : function(data){
-			swal("Error", "There was an error during the call.<br>" + data.message, "error");
-		}
-	 });
+		hub.refreshData(id, token);
 	} else {
 		//Generate mock items
 		$("#hub_table_body").html(""); //Empty the table
 		$("#hub_table_body").html($("#hub_table_body").html() + 
 			"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"potatoes\" data-name=\"potatoes\">" +
 			"Potatoes</td><td>" + 30 + " units</td><td>" + 2 + " units" + 
-			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_potatoes\"  value=0 required></td></tr>"
+			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_potatoes\"  value=0></td></tr>"
 		); //add table row for the item
 		$("#hub_table_body").html($("#hub_table_body").html() + 
 			"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"yogurt\" data-name=\"yogurt\">" +
 			"Yogurt</td><td>" + 2500 + " mL</td><td>" + 250 + " mL" + 
-			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_yogurt\"  value=0 required></td></tr>"
+			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_yogurt\"  value=0></td></tr>"
 		); //add table row for the item
 		$("#hub_table_body").html($("#hub_table_body").html() + 
 			"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"tp\" data-name=\"Toilet paper\">" +
 			"Toilet paper</td><td>" + 48 + " units</td><td>" + 1 + " units" + 
-			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_tp\"  value=0 required></td></tr>"
+			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_tp\"  value=0></td></tr>"
 		); //add table row for the item
 		//Draw mock graphs
 		$.plot($("#graphZone"), mockData, {
@@ -177,5 +237,10 @@ $(document).ready(function(){
 			});
 			}
 		}
+	});
+	$("#submit_use").click(function(){
+		$(".item_use").each(function(){
+			//Function to execute for each item
+		});
 	});
 });

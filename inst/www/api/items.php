@@ -26,7 +26,8 @@
 		} else {
 			//API implementation
 			if($_SERVER['REQUEST_METHOD'] == 'GET'){
-				$select = "SELECT * FROM item WHERE user_id = {$_GET["user_id"]}";
+				$select = "SELECT id, name, inventory, unit, usual_use_size, IF(slope_days IS NOT NULL, slope_days, estimated_daily_use) as model, tracked_since
+					FROM item WHERE user_id = {$_GET["user_id"]}";
 				$result = mysqli_fetch_all($conn->query($select), MYSQLI_ASSOC);
 				header('Content-Type: application/json');
 				echo json_encode($result);
