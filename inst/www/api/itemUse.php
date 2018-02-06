@@ -56,16 +56,44 @@
 				header('Content-Type: application/json');
 				echo json_encode($result);
 			} else if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-				if(!isset($_POST['item_id']) && !isset($_POST['date_nbr']) && !isset($_POST['qty'])){
+				if(!isset($_POST['items'])){
 					http_response_code(400);
 				} else {
-					$insert = "INSERT INTO item_use (item_id, date_nbr, date, qty) 
-						VALUES(\"{$_POST['item_id']}\", \"{$_POST['date_nbr']}\", \"{$dateDDMMYYYY}\", \"{$_POST['qty']}\");";
-					if ($conn->query($insert) === TRUE) {
+					error_log(json_encode($_POST['items']));
+					//$items = json_decode($_POST['items'], true);
+					$items = $_POST['items'];
+					$successful = (count($items) > 0);
+					error_log("successful = {$successful}");
+					foreach($items as $item){
+						error_log("start loop" . json_encode($item));
+						//Get the date number
+						//Date format : YYYY-MM-DD
+						$date1 = new DateTime(substr($dateDDMMYYYY, 4, 4) . '-' . substr($dateDDMMYYYY, 2, 2) . '-' . substr($dateDDMMYYYY, 0, 2));
+						$date2 = new DateTime(substr($item["tracked_since"], 4, 4) . '-' . substr($item["tracked_since"], 2, 2) . '-' . substr($item["tracked_since"], 0, 2));
+						$diff = $date2->diff($date1)->format("%a"); //Get the difference in days
+						$date_nbr = $diff + 1;
+						
+						//Create the query
+						$query = "";
+						if($item["update"] != "false"){
+							$query = "UPDATE item_use SET qty = {$item['qty']} WHERE item_id = {$item['item_id']} and date = {$dateDDMMYYYY}";
+						} else {
+							$query = "INSERT INTO item_use (item_id, date_nbr, date, qty) VALUES(\"{$item['item_id']}\", \"{$date_nbr}\", \"{$dateDDMMYYYY}\", \"{$item['qty']}\");";
+						}
+						error_log("Query" . $query);
+						if ($conn->query($query) === TRUE) {
+							$successful = $successful && TRUE;
+						} else {//Error
+							error_log(mysqli_error($conn));
+							$successful = $successful && FALSE;
+						}
+						error_log("end loop");
+					}
+					error_log("successful (after) = {$successful}");
+					if($successful){
 						//Change http response code 
 						http_response_code(201);
-					} else {//Error
-						error_log(mysqli_error($conn));
+					} else {
 						//Change http response code 
 						header('HTTP/1.1 500 Internal server error');
 						echo json_encode(["message" =>  "An error occurred during the procedure." ]);

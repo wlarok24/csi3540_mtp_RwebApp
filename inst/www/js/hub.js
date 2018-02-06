@@ -3,6 +3,7 @@
 */
 var hub = hub || {};
 hub.data = [];
+hub.useData = [];
 hub.predictionGraphData = [];
 hub.refreshData = function(id, token){
 	$.ajax({
@@ -12,12 +13,13 @@ hub.refreshData = function(id, token){
 		context : document.body,
 		success : function(data){
 			hub.data = data; //Refresh data
+			hub.useData = new Array(data.length);
 			$("#hub_table_body").html(""); //Empty the table
 			for(var i = 0; i < data.length; i++){
 				$("#hub_table_body").html($("#hub_table_body").html() + 
 					"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"" + data[i].id + "\" data-name=\"" + data[i].name + "\">" +
 					data[i].name + "</td><td>" + data[i].inventory + " " +  data[i].unit + "</td><td>" + data[i].usual_use_size + " " +  data[i].unit + 
-					"</td><td><input type=\"number\" class=\"form-control bg-dark item_use\" id=\"item_use_" + data[i].id + "\"  data-id=\"" + data[i].id + "\" data-pos=\"" + i + "\" value=0></td></tr>"
+					"</td><td><input type=\"number\" class=\"form-control bg-dark item_use\" id=\"item_use_" + data[i].id + "\" data-pos=\"" + i + "\"value=0></td></tr>"
 				); //add table row for the item
 				//Prep graph data
 				var itemGraphData = [];
@@ -30,7 +32,7 @@ hub.refreshData = function(id, token){
 					data : itemGraphData,
 					lines : {line : true, fill : false}
 				});
-				hub.getTodaysItemUse(id, token, data[i].id);
+				hub.getTodaysItemUse(id, token, data[i]);
 			}
 			//Draw graph
 			$.plot($("#graphZone"), hub.predictionGraphData, {
@@ -62,16 +64,20 @@ hub.refreshData = function(id, token){
 		}
 	});
 };
-hub.getTodaysItemUse = function(id, token, item_id){
+hub.getTodaysItemUse = function(id, token, item){
 	$.ajax({
-		url : "/api/itemUse.php?user_id=" + id + "&user_token=" + token + "&op=today&item_id=" + item_id,
+		url : "/api/itemUse.php?user_id=" + id + "&user_token=" + token + "&op=today&item_id=" + item.id,
 		method : 'GET',
 		cache : false,
 		context : document.body,
 		success : function(data){
-			for(var i = 0; i < data.length; i++){
+			var pos = $("#item_use_" + item.id).data("pos"); //Get position in Array
+			if(data.length == 1){
 				//Update item use
-				$("#item_use_" + data[i].item_id).value(data[i].qty);
+				$("#item_use_" + data[0].item_id).val(data[0].qty);
+				hub.useData[pos] = data[0];
+			} else {//No use data
+				hub.useData[pos] = null;
 			}
 		},
 		error : function(data){
@@ -239,8 +245,68 @@ $(document).ready(function(){
 		}
 	});
 	$("#submit_use").click(function(){
-		$(".item_use").each(function(){
-			//Function to execute for each item
+		var itemsToSend = [];
+		var promises = [];
+		var allItems = $(".item_use").each(function(pos, item){//Iterate through the inputs
+			var promise = $.Deferred();
+			promises.push(promise);
+			var sendUseData = false;
+			var val = Number.parseInt(item.value);
+			if(hub.useData[pos] == null){
+				//No use data for today
+				if(val > 0){
+					if(!isNaN(val) && parseInt(Number(val)) == val && !isNaN(parseInt(val, 10))){
+						//value is integer
+						itemsToSend.push({
+							item_id : hub.data[pos].id, 
+							tracked_since : hub.data[pos].tracked_since,
+							qty : val,
+							update : false
+						});
+					}
+				}
+			} else {
+				//There is use data for today
+				if((val != hub.useData[pos].qty)&&(val >= 0)){
+					// Value change
+					if(!isNaN(val) && parseInt(Number(val)) == val && !isNaN(parseInt(val, 10))){
+						//value is integer
+						itemsToSend.push({
+							item_id : hub.data[pos].id, 
+							tracked_since : hub.data[pos].tracked_since,
+							qty : val,
+							update : true
+						});
+					}
+				}
+			}
+			//Resolve promise
+			promise.resolve();
+		});
+		//Only do this when all the each loops are done
+		$.when.apply($, promises).done(function(){
+			if((itemsToSend.length > 0)&&(!mockHub)){
+				$.ajax({
+					url : "/api/itemUse.php?user_id=" + id + "&user_token=" + token,
+					method : 'POST',
+					cache : false,
+					context : document.body,
+					data : {
+						'items' : itemsToSend
+					},
+					dataType : "json",
+					statusCode : {
+						201 : function(){
+							swal("Success", "Use data successfully added.", "success");
+						}
+					},
+					error : function(data){
+						swal("Error", "There was an error during the call.<br>" + data.message, "error");
+					}
+				});
+			} else if(itemsToSend.length <= 0){
+				swal("Error", "None of the values changed since your previous submit.", "error");
+			}
 		});
 	});
 });
