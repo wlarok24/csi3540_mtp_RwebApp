@@ -10,6 +10,19 @@
 .card {
 	margin : 15px;
 }
+
+/* For inventory buttons */
+@media (max-width : 576px){
+	#inventory-btn-group{
+		display : flex;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+	#inventory-btn-group > button {
+		flex-grow : 1;
+	}
+}
+
 /* For plots */
 .flot {
 	width : 100%; /* Of parent */

@@ -25,7 +25,9 @@ hub.refreshData = function(id, token){
 				var itemGraphData = [];
 				var today = Date.now();
 				for(var j = 0; j <= 14; j++){
-					itemGraphData.push([today + j * 24*60*60*1000, Math.ceil(data[i].inventory/data[i].usual_use_size - data[i].model/data[i].usual_use_size*j)]);
+					var y = Math.ceil(data[i].inventory/data[i].usual_use_size - data[i].model/data[i].usual_use_size*j);
+					if(y < 0){y = 0;}
+					itemGraphData.push([today + j * 24*60*60*1000, y]);
 				}
 				hub.predictionGraphData.push({
 					label : data[i].name,
