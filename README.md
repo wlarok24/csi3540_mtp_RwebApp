@@ -21,8 +21,8 @@ De plus, vous ne pourrez pas tester les fonctionnalités de l'API PHP qui sont d
   * Navigation
     * Options pour usager logged-in ou logged out **(en développement)**
   * Hub
-    * Tableau des items (Mock data)
-    * Graphique de prédiction de l'inventaire (Mock data)
+    * Tableau des items (Mock data pour l'instant) **(en développement)**
+    * Graphique de prédiction de l'inventaire (Mock data pour l'instant) **(en développement)**
     * Graphique sur la consommation d'un item **(en développement)**
     * Connexion avec la base de données **(en développement)**
   * Sign up
