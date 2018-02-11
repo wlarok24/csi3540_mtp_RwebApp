@@ -50,7 +50,7 @@
 <div class="modal" tabindex="-1" role="dialog" id="item-modal">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content bg-dark whiteText">
-      <form action="index.html" method="post">
+      <form>
 		  <div class="modal-header">
 			<h5 class="modal-title">Add an item</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -88,6 +88,40 @@
   </div>
 </div>
 
+<!-- Change inventory modal -->
+<div class="modal" tabindex="-1" role="dialog" id="inventory-modal">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-dark whiteText">
+      <form>
+		  <div class="modal-header">
+			<h5 class="modal-title">Change inventory - <text class="inventory-name"></text></h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body" id="item-form">
+				<div class="alert alert-warning" role="alert">
+					<strong>This does not count towards the item's use. If you want to submit that information, use the "Submit use" button instead.</strong>
+				</div>
+				<div class="form-group whiteText">
+					<label for="inventory-qty">New inventory of <strong class="inventory-name"></strong></label>
+					<div class="input-group">
+						<input type="number" class="form-control bg-dark" placeholder="Enter your current inventory" id="inventory-qty" name="item-inventory" required>
+						<div class="input-group-append">
+							<div class="input-group-text bg-theme" id="inventory-unit"></div>
+						</div>
+					</div>
+				</div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-theme" id='inventory-update'>Update</button>
+			<button type="button" class="btn btn-theme" data-dismiss="modal">Cancel</button>
+		  </div>
+	  </form>
+    </div>
+  </div>
+</div>
+
 <!-- Page content -->
 <h1 id="myhub" class="title">My hub</h1>
 <div class="container-fluid extra-padding">
@@ -115,7 +149,7 @@
 							<th>Today's use</th>
 						</tr></tfoot>
 					</table></div>
-				<div class="btn-group" id="inventory-btn-group">
+				<div class="btn-group theme-btn-group">
 					<button type="button" class="btn btn-theme" name='add_item' id='add_item' data-toggle="modal" data-target="#item-modal">Add</button>
 					<button type="button" class="btn btn-theme" name='change_item_inventory' id='change_item_inventory'>Change inventory</button>
 					<button type="button" class="btn btn-theme" name='remove_item' id='remove_item'>Remove</button>
@@ -128,10 +162,35 @@
 	<div class="col-12">
 		<div class="card text-center" id="cards-hub">
 			<div class="card-header bg-theme">
-				<h3 class="blackText" id="graph">Graphic reports</h3>
+				<h3 class="blackText" id="graph">Graph reports</h3>
 			</div>
-			<div class="card-body flot-container bg-dark whiteText">
-				<div id="graphZone" class="flot"></div>
+			<div class="card-body flot-container bg-dark whiteText" id="graph-tabs-parent">
+				<ul class="nav nav-tabs nav-fill" id="graph-tabs">
+					<li class="nav-item">
+						<a type="button" class="nav-link active" id="inventoryGraph">Inventory</a>
+					</li>
+					<li class="nav-item">
+						<a type="button" class="nav-link" id="consumptionGraph">Consumption</a>
+					</li>
+				</ul>
+				<div class="under-nav">
+					<div class="btn-toolbar" role="toolbar" id="consumptionGraph-toolbar">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text bg-theme" id="btnGroupAddon">Choose an item</div>
+							</div>
+							<select class="form-control bg-dark" id="consumptionGraph-item">
+								<option>Test 1</option>
+								<option>Test 2</option>
+								<option>Test 3</option>
+							</select>
+							<div class="input-group-append">
+								<button type="button" class="btn btn-theme" id="consumptionGraph-draw">Draw</button>
+							</div>
+						</div>
+					</div>
+					<div id="graphZone" class="flot"></div>
+				</div>
 			</div>
 		</div>
 	</div>

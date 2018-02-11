@@ -36,8 +36,7 @@
 						http_response_code(400);
 						return;
 					} else {
-						$select = "SELECT item_id, date_nbr, date, qty FROM item_use 
-						WHERE item_id = {$_GET["item_id"]} and date = {$dateDDMMYYYY};";
+						$select = "SELECT item_id, date_nbr, date, qty FROM item_use WHERE item_id = {$_GET["item_id"]} and date = {$dateDDMMYYYY};";
 					}
 				} else if($_GET["op"] == "archive"){
 					if(!isset($_GET["item_id"])){
@@ -63,9 +62,9 @@
 					//$items = json_decode($_POST['items'], true);
 					$items = $_POST['items'];
 					$successful = (count($items) > 0);
-					error_log("successful = {$successful}");
+					//error_log("successful = {$successful}");
 					foreach($items as $item){
-						error_log("start loop" . json_encode($item));
+						//error_log("start loop" . json_encode($item));
 						//Get the date number
 						//Date format : YYYY-MM-DD
 						$date1 = new DateTime(substr($dateDDMMYYYY, 4, 4) . '-' . substr($dateDDMMYYYY, 2, 2) . '-' . substr($dateDDMMYYYY, 0, 2));
@@ -76,20 +75,32 @@
 						//Create the query
 						$query = "";
 						if($item["update"] != "false"){
+							if(!isset($item['prev_qty'])){
+								//Change http response code 
+								http_response_code(400);
+								return;
+							}
 							$query = "UPDATE item_use SET qty = {$item['qty']} WHERE item_id = {$item['item_id']} and date = {$dateDDMMYYYY}";
 						} else {
 							$query = "INSERT INTO item_use (item_id, date_nbr, date, qty) VALUES(\"{$item['item_id']}\", \"{$date_nbr}\", \"{$dateDDMMYYYY}\", \"{$item['qty']}\");";
 						}
-						error_log("Query" . $query);
+						//error_log("Query" . $query);
 						if ($conn->query($query) === TRUE) {
-							$successful = $successful && TRUE;
+							//Decrement inventory
+							$update = "UPDATE item SET inventory = inventory - {$item['qty']} + {$item['prev_qty']} WHERE id = {$item['item_id']}";
+							if ($conn->query($update) === TRUE) {
+								$successful = $successful && TRUE;
+							} else {//Error
+								error_log(mysqli_error($conn));
+								$successful = $successful && FALSE;
+							}
 						} else {//Error
 							error_log(mysqli_error($conn));
 							$successful = $successful && FALSE;
 						}
-						error_log("end loop");
+						//error_log("end loop");
 					}
-					error_log("successful (after) = {$successful}");
+					//error_log("successful (after) = {$successful}");
 					if($successful){
 						//Change http response code 
 						http_response_code(201);

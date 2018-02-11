@@ -65,6 +65,24 @@
 					//Change http response code 
 					http_response_code(400);//Bad request
 				}
+			} else if ($_SERVER['REQUEST_METHOD'] == 'PATCH'){
+				//Will use the url to pass the information (can use $_GET)
+				$id = $_GET['item_id'];
+				$qty = $_GET['item_qty'];
+				if(isset($id)){
+					$update = "UPDATE item SET inventory = {$qty} WHERE id = {$id}";
+					if ($conn->query($update) === TRUE) {
+						//Change http response code 
+						http_response_code(200);
+					} else {//Error
+						//Change http response code 
+						header('HTTP/1.1 500 Internal server error');
+						echo json_encode(["message" =>  "An error occurred during the procedure."]);
+					}
+				} else {
+					//Change http response code 
+					http_response_code(400);//Bad request
+				}
 			} else {
 				// Invalid Request Method
 				http_response_code(405);

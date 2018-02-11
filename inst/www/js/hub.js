@@ -5,6 +5,36 @@ var hub = hub || {};
 hub.data = [];
 hub.useData = [];
 hub.predictionGraphData = [];
+hub.consumptionGraphData = {
+	item_id : "",
+	data : {}
+};
+hub.drawGraph = function(data, minDate, maxDate){
+	//Draw graph
+	$.plot($("#graphZone"), data, {
+		grid : {
+			show : true,
+			color : "#00ccff"
+		}, xaxis : {
+			mode : "time",
+			min : minDate,
+			max : maxDate,
+			font : {
+				color : "#ffffff"
+			}
+		}, yaxis : {
+			min : 0,
+			font : {
+				color : "#ffffff"
+			}
+		}, legend : { 
+			show : true, 
+			sorted : "ascending",
+			position : "sw",
+			backgroundOpacity : 0.5
+		}
+	});
+}
 hub.refreshData = function(id, token){
 	$.ajax({
 		url : "/api/items.php?user_id=" + id + "&user_token=" + token,
@@ -14,13 +44,16 @@ hub.refreshData = function(id, token){
 		success : function(data){
 			hub.data = data; //Refresh data
 			hub.useData = new Array(data.length);
-			$("#hub_table_body").html(""); //Empty the table
+			hub.predictionGraphData = [];
+			$("#hub_table_body").empty(); //Empty the table
+			$("#consumptionGraph-item").html("<option value=\"\"></value>"); //Reset item select
 			for(var i = 0; i < data.length; i++){
 				$("#hub_table_body").html($("#hub_table_body").html() + 
-					"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"" + data[i].id + "\" data-name=\"" + data[i].name + "\">" +
+					"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-pos=\"" + i + "\" data-id=\"" + data[i].id + "\" data-name=\"" + data[i].name + "\">" +
 					data[i].name + "</td><td>" + data[i].inventory + " " +  data[i].unit + "</td><td>" + data[i].usual_use_size + " " +  data[i].unit + 
 					"</td><td><input type=\"number\" class=\"form-control bg-dark item_use\" id=\"item_use_" + data[i].id + "\" data-pos=\"" + i + "\"value=0></td></tr>"
 				); //add table row for the item
+				$("#consumptionGraph-item").html($("#consumptionGraph-item").html() + "<option value=\"" + data[i].id + "\">" + data[i].name + "</option>");
 				//Prep graph data
 				var itemGraphData = [];
 				var today = Date.now();
@@ -37,38 +70,16 @@ hub.refreshData = function(id, token){
 				hub.getTodaysItemUse(id, token, data[i]);
 			}
 			//Draw graph
-			$.plot($("#graphZone"), hub.predictionGraphData, {
-				grid : {
-					show : true,
-					color : "#00ccff"
-				}, xaxis : {
-					mode : "time",
-					min : today,
-					max : today + 14*24*60*60*1000,
-					font : {
-						color : "#ffffff"
-					}
-				}, yaxis : {
-					min : 0,
-					font : {
-						color : "#ffffff"
-					}
-				}, legend : { 
-					show : true, 
-					sorted : "ascending",
-					position : "sw",
-					backgroundOpacity : 0.5
-				}
-			});
+			hub.drawGraph(hub.predictionGraphData, today, today + 14*24*60*60*1000);
 		},
 		error : function(data){
 			swal("Error", "There was an error during the call.<br>" + data.message, "error");
 		}
 	});
 };
-hub.getTodaysItemUse = function(id, token, item){
+hub.getTodaysItemUse = function(user_id, token, item){
 	$.ajax({
-		url : "/api/itemUse.php?user_id=" + id + "&user_token=" + token + "&op=today&item_id=" + item.id,
+		url : "/api/itemUse.php?user_id=" + user_id + "&user_token=" + token + "&op=today&item_id=" + item.id,
 		method : 'GET',
 		cache : false,
 		context : document.body,
@@ -81,6 +92,34 @@ hub.getTodaysItemUse = function(id, token, item){
 			} else {//No use data
 				hub.useData[pos] = null;
 			}
+		},
+		error : function(data){
+			swal("Error", "There was an error during the call.<br>" + data.message, "error");
+		}
+	});
+};
+hub.getUseArchiveData = function(user_id, token, item_id, item_name){
+	$.ajax({
+		url : "/api/itemUse.php?user_id=" + user_id + "&user_token=" + token + "&op=archive&item_id=" + item_id,
+		method : 'GET',
+		cache : false,
+		context : document.body,
+		success : function(data){
+			hub.consumptionGraphData.item_id = item_id;
+			var graphData = [];
+			for(var i = 0; i < data.length; i++){
+				var date = data[i].date;
+				var isodate = date.substr(4, 4) + '-' + date.substr(2, 2) + '-' + date.substr(0, 2);
+				var jsDate = new Date(isodate);
+				graphData.push([jsDate.getTime(), Number.parseInt(data[i].qty)]);
+			}
+			hub.consumptionGraphData.data = [{
+				label : item_name,
+				data : graphData,
+				bars: { show: true }
+			}];
+			var today = Date.now();
+			hub.drawGraph(hub.consumptionGraphData.data, today - 14*24*60*60*1000, today);
 		},
 		error : function(data){
 			swal("Error", "There was an error during the call.<br>" + data.message, "error");
@@ -199,6 +238,32 @@ $(document).ready(function(){
 			swal("Error", "Please check an item.", "error");
 		}
 	});
+	// Change inventory
+	$("#change_item_inventory").click(function(){
+		var radio_checked = $("input[name='item_radio']:checked");
+		if(radio_checked.length == 1){ //an item is checked
+			$(".inventory-name").html(radio_checked.data("name"));
+			$("#inventory-unit").html(hub.data[radio_checked.data("pos")].unit);
+			$("#inventory-modal").modal('show');
+		} else {
+			swal("Error", "Please check an item.", "error");
+		}
+	});
+	$("#inventory-update").click(function(){
+		//inventory-qty
+		var val = $("#inventory-qty").val();
+		if(val == ""){
+			swal("Error", "Please enter a quantity.", "error");
+		} else if(isNaN(val)){
+			swal("Error", "The inventory is not an integer.", "error");
+		} else if (!Number.isInteger(Number.parseFloat(val))){
+			swal("Error", "The inventory is not an integer.", "error");
+		} else {
+			swal("Test", "You submitted " + val + " as your new inventory!")
+		}
+	});
+	
+	//Add item
 	$("#add-item").click(function(){//Click handler for add-item
 		//Check input validity
 		if($("#item-name").val() == "" || $("#item-unit").val() == "" || $("#item-size").val() == ""
@@ -210,12 +275,12 @@ $(document).ready(function(){
 		} else if (isNaN($("#item-estimate").val())||isNaN($("#item-size").val())
 			|| isNaN($("#item-inventory").val())){//Number field need to be numbers
 			swal("Error", "Number field(s) inputs are not numbers.", "error");
-		} else if (Number.isInteger($("#item-inventory").val()) || Number.isInteger($("#item-size").val())){
-			swal("Error", "The usual use size and estimated daily use cannot be zero or negative.", "error");
+		} else if (!Number.isInteger(Number.parseFloat($("#item-inventory").val())) || !Number.isInteger(Number.parseFloat($("#item-size").val()))){
+			swal("Error", "The inventory or the item size are not integers.", "error");
 		} else if ($("#item-estimate").val() <= 0 || $("#item-size").val() <= 0){
 			swal("Error", "The usual use size and estimated daily use cannot be zero or negative.", "error");
 		} else if ($("#item-inventory").val() < 0){
-			swal("Error", "The usual use size and estimated daily use cannot be negative.", "error");
+			swal("Error", "The inventory cannot be negative.", "error");
 		} else {
 			if(!mockHub){
 			//Make ajax call to hubAjaxHandler
@@ -265,6 +330,10 @@ $(document).ready(function(){
 							qty : val,
 							update : false
 						});
+						hub.useData[pos] = {
+							item_id : hub.data[pos].id,
+							qty : val
+						}
 					}
 				}
 			} else {
@@ -277,6 +346,7 @@ $(document).ready(function(){
 							item_id : hub.data[pos].id, 
 							tracked_since : hub.data[pos].tracked_since,
 							qty : val,
+							prev_qty : hub.useData[pos].qty,
 							update : true
 						});
 					}
@@ -300,6 +370,7 @@ $(document).ready(function(){
 					statusCode : {
 						201 : function(){
 							swal("Success", "Use data successfully added.", "success");
+							hub.refreshData(id, token);
 						}
 					},
 					error : function(data){
@@ -310,5 +381,31 @@ $(document).ready(function(){
 				swal("Error", "None of the values changed since your previous submit.", "error");
 			}
 		});
+	});
+	$("#consumptionGraph-toolbar").hide(); //Hide initially
+	$("#inventoryGraph").click(function(){
+		$("#graph-tabs").find(".nav-link").removeClass("active");
+		$("#consumptionGraph-toolbar").hide(500); //Hide with animation
+		$(this).addClass("active");
+		//Redraw graph (next 14 days)
+		var today = Date.now();
+		hub.drawGraph(hub.predictionGraphData, today, today + 14*24*60*60*1000);
+	});
+	$("#consumptionGraph").click(function(){
+		$("#graph-tabs").find(".nav-link").removeClass("active");
+		$("#consumptionGraph-toolbar").show(500); //Hide with animation
+		$(this).addClass("active");
+		//Redraw graph (past 14 days)
+		var today = Date.now();
+		hub.drawGraph(hub.consumptionGraphData.data, today - + 14*24*60*60*1000, today);
+	});
+	$("#consumptionGraph-draw").click(function(){
+		var item_id = $("#consumptionGraph-item").val();
+		var name = $("#consumptionGraph-item").find("option[value=" + item_id + "]").html();
+		if (item_id == ""){
+			swal("Warning", "You need to choose an item, before drawing the graph.", "warning");
+		} else {
+			hub.getUseArchiveData(id, token, item_id, name);
+		}
 	});
 });

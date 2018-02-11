@@ -11,16 +11,50 @@
 	margin : 15px;
 }
 
-/* For inventory buttons */
-@media (max-width : 576px){
-	#inventory-btn-group{
-		display : flex;
-		justify-content: center;
-		flex-wrap: wrap;
-	}
-	#inventory-btn-group > button {
-		flex-grow : 1;
-	}
+/* Graph graphTabs css */
+#graph-tabs-parent {
+	/* Remove padding of body so that nav seems to be a part of the header */
+	padding : 0px;
+}
+#graph-tabs-parent .under-nav {
+	padding : 10px 20px 20px 20px;
+}
+#graph-tabs {
+	margin-top : -1px;
+	background-color : transparent;
+	border-width : 2px;
+	border-color : #222222;
+	color : rgb(255,255,255);
+}
+#graph-tabs .nav-item {
+	background-color : rgb(0,204,255);
+	color : rgb(0,0,0);
+}
+#graph-tabs .nav-link{
+	color : rgb(0,0,0);
+}
+#graph-tabs .nav-link.active, #graph-tabs .nav-link.active:hover, #graph-tabs .nav-link.active:focus{
+	background-color : #222222;
+	border-color : #222222;
+	border-width : 2px;
+	color : rgb(0,204,255);
+}
+#graph-tabs .nav-link.active:hover, #graph-tabs .nav-link.active:focus {
+	text-decoration : underline;
+}
+#graph-tabs .nav-link:hover, #graph-tabs .nav-link:focus,
+#graph-tabs .nav-link:hover, #graph-tabs .nav-link:focus{
+	text-decoration : underline !important;
+	border-color : rgb(0,204,255);
+}
+
+/* Graph consumptionGraph-toolbar css */
+#consumptionGraph-toolbar{
+	display : flex;
+	justify-content: center;
+}
+.btn-toolbar > div{
+	margin : 10px;
 }
 
 /* For plots */
