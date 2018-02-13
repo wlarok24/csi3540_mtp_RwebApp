@@ -69,7 +69,10 @@ hub.refreshData = function(id, token){
 				});
 				hub.getTodaysItemUse(id, token, data[i]);
 			}
-			//Draw graph
+			//Draw inventory graph
+			$("#graph-tabs").find(".nav-link").removeClass("active");
+			$("#consumptionGraph-toolbar").hide(); //Hide without animation
+			$("#inventoryGraph").addClass("active");
 			hub.drawGraph(hub.predictionGraphData, today, today + 14*24*60*60*1000);
 		},
 		error : function(data){
@@ -128,80 +131,14 @@ hub.getUseArchiveData = function(user_id, token, item_id, item_name){
 };
 $(document).ready(function(){
 	var id, token, mockHub = false, mockData;
-	if(window.location.href.indexOf("csi3540_mtp_RwebApp/inst/www") != -1){
-		//Offline (For mockups)
-		mockHub = true;
-		var potatoes =[], yogurt = [], tp = [];
-		var today = Date.now();
-		for(var i = 0; i <= 14; i++){
-			potatoes.push([today + i * 24*60*60*1000, Math.ceil(15 - 5/6*i)]);
-			yogurt.push([today + i * 24*60*60*1000, Math.ceil(10 - 0.5*i)]);
-			tp.push([today + i * 24*60*60*1000, Math.ceil(48 - 0.25 * i)]);
-		}
-		mockData = [{
-				label : "Potatoes",
-				data : potatoes,
-				lines : {line : true, fill : false}
-			},{
-				label : "Yogurt",
-				data : yogurt,
-				lines : {line : true, fill : false}
-			}, {
-				label : "Toilet paper",
-				data : tp,
-				lines : {line : true, fill : false}
-			}];
-	} else if (sessionStorage.length > 0){ 
+	if (sessionStorage.length > 0){ 
 		id = sessionStorage.getItem("user_id");
 		token = sessionStorage.getItem("user_token");
+		hub.refreshData(id, token);
 	} else {
 		id = localStorage.getItem("user_id");
 		token = localStorage.getItem("user_token");
-	}
-	if(!mockHub){
 		hub.refreshData(id, token);
-	} else {
-		//Generate mock items
-		$("#hub_table_body").html(""); //Empty the table
-		$("#hub_table_body").html($("#hub_table_body").html() + 
-			"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"potatoes\" data-name=\"potatoes\">" +
-			"Potatoes</td><td>" + 30 + " units</td><td>" + 2 + " units" + 
-			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_potatoes\"  value=0></td></tr>"
-		); //add table row for the item
-		$("#hub_table_body").html($("#hub_table_body").html() + 
-			"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"yogurt\" data-name=\"yogurt\">" +
-			"Yogurt</td><td>" + 2500 + " mL</td><td>" + 250 + " mL" + 
-			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_yogurt\"  value=0></td></tr>"
-		); //add table row for the item
-		$("#hub_table_body").html($("#hub_table_body").html() + 
-			"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-id=\"tp\" data-name=\"Toilet paper\">" +
-			"Toilet paper</td><td>" + 48 + " units</td><td>" + 1 + " units" + 
-			"</td><td><input type=\"number\" class=\"form-control bg-dark\" id=\"item_use_tp\"  value=0></td></tr>"
-		); //add table row for the item
-		//Draw mock graphs
-		$.plot($("#graphZone"), mockData, {
-			grid : {
-				show : true,
-				color : "#00ccff"
-			}, xaxis : {
-				mode : "time",
-				min : today,
-				max : today + 14*24*60*60*1000,
-				font : {
-					color : "#ffffff"
-				}
-			}, yaxis : {
-				min : 0,
-				font : {
-					color : "#ffffff"
-				}
-			}, legend : { 
-				show : true, 
-				sorted : "ascending",
-				position : "sw",
-				backgroundOpacity : 0.5
-			}
-		});
 	}
 	$("#remove_item").click(function(){
 		var radio_checked = $("input[name='item_radio']:checked");
@@ -215,7 +152,6 @@ $(document).ready(function(){
 				"Are you sure you want to remove " + radio_checked.data("name")+ "?",
 			  showLoaderOnConfirm: true
 			}).then(() => {//Confirm
-				if(!mockHub){
 				 $.ajax({
 					url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + radio_checked.data("id"),
 					method : 'DELETE',
@@ -224,7 +160,7 @@ $(document).ready(function(){
 					statusCode : {
 						204 : function(){ //Delete successful
 							swal("Deleted!", "The item was successfully deleted!", "success").then(() => {
-								window.location.reload(true); //Force reload of page
+								hub.refreshData(id, token); //Refresh the data
 							});
 						}
 					},
@@ -232,7 +168,6 @@ $(document).ready(function(){
 						swal("Error", "There was an error during the call.<br>" + data.message, "error");
 					}
 				 });
-				}
 			  });
 		} else {
 			swal("Error", "Please check an item.", "error");
@@ -259,7 +194,24 @@ $(document).ready(function(){
 		} else if (!Number.isInteger(Number.parseFloat(val))){
 			swal("Error", "The inventory is not an integer.", "error");
 		} else {
-			swal("Test", "You submitted " + val + " as your new inventory!")
+			var item_id = $("input[name='item_radio']:checked").data("id"); //Get id of checked item
+			$.ajax({
+				url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + item_id + "&item_qty=" + val,
+				method : 'PATCH',
+				cache : false,
+				context : document.body,
+				statusCode : {
+					200 : function(){
+						swal("Success", "The inventory was updated!", "success").then(() => {
+							hub.refreshData(id, token); //Refresh the data
+							$("#inventory-modal").modal('hide');
+						});
+					}
+				},
+				error : function(data){
+					swal("Error", "There was an error during the call.<br>" + data.message, "error");
+				}
+			});
 		}
 	});
 	
@@ -282,7 +234,6 @@ $(document).ready(function(){
 		} else if ($("#item-inventory").val() < 0){
 			swal("Error", "The inventory cannot be negative.", "error");
 		} else {
-			if(!mockHub){
 			//Make ajax call to hubAjaxHandler
 			$.ajax({
 				url : "/api/items.php?user_id=" + id + "&user_token=" + token,
@@ -300,7 +251,8 @@ $(document).ready(function(){
 				statusCode : {
 					201 : function(){
 						swal("Success", "Item successfully added.", "success").then(() => {
-							window.location.reload(true); //Force reload of page
+							hub.refreshData(id, token); //Refresh the data
+							$("#item-modal").modal('hide');
 						});
 					}
 				},
@@ -308,12 +260,11 @@ $(document).ready(function(){
 					swal("Error", "There was an error during the call.<br>" + data.message, "error");
 				}
 			});
-			}
 		}
 	});
 	$("#submit_use").click(function(){
 		var itemsToSend = [];
-		var promises = [];
+		var promises = []; //Tableau qui va contenir tous les promesses (pour faire un appel AJAX)
 		var allItems = $(".item_use").each(function(pos, item){//Iterate through the inputs
 			var promise = $.Deferred();
 			promises.push(promise);
@@ -369,8 +320,9 @@ $(document).ready(function(){
 					dataType : "json",
 					statusCode : {
 						201 : function(){
-							swal("Success", "Use data successfully added.", "success");
-							hub.refreshData(id, token);
+							swal("Success", "Use data successfully added.", "success").then(() => {
+								hub.refreshData(id, token); //Refresh the data
+							});
 						}
 					},
 					error : function(data){
@@ -382,7 +334,6 @@ $(document).ready(function(){
 			}
 		});
 	});
-	$("#consumptionGraph-toolbar").hide(); //Hide initially
 	$("#inventoryGraph").click(function(){
 		$("#graph-tabs").find(".nav-link").removeClass("active");
 		$("#consumptionGraph-toolbar").hide(500); //Hide with animation
@@ -393,7 +344,7 @@ $(document).ready(function(){
 	});
 	$("#consumptionGraph").click(function(){
 		$("#graph-tabs").find(".nav-link").removeClass("active");
-		$("#consumptionGraph-toolbar").show(500); //Hide with animation
+		$("#consumptionGraph-toolbar").show(500); //Show with animation
 		$(this).addClass("active");
 		//Redraw graph (past 14 days)
 		var today = Date.now();

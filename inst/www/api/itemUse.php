@@ -1,16 +1,11 @@
 <?php 
-	// Not implemented
-	//http_response_code(501);
+	require("apiCredentials.php");
 	
 	if(!isset($_GET["user_id"]) && !isset($_GET["user_token"])){
 		//Change http response code 
 		http_response_code(400);
 		return;
 	}
-	$servername = "localhost";
-	$username = "CSI3540PHP";
-	$password = "Alpha2595!";
-	$dbname = "CSI3540DB";
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	$dateDDMMYYYY = date("d") . date("m") . date("Y");
 	// Check connection
@@ -74,12 +69,14 @@
 						
 						//Create the query
 						$query = "";
+						$prev_qty = 0;
 						if($item["update"] != "false"){
 							if(!isset($item['prev_qty'])){
 								//Change http response code 
 								http_response_code(400);
 								return;
 							}
+							$prev_qty = $item['prev_qty']; //Update value of prev_qty to previous quantity
 							$query = "UPDATE item_use SET qty = {$item['qty']} WHERE item_id = {$item['item_id']} and date = {$dateDDMMYYYY}";
 						} else {
 							$query = "INSERT INTO item_use (item_id, date_nbr, date, qty) VALUES(\"{$item['item_id']}\", \"{$date_nbr}\", \"{$dateDDMMYYYY}\", \"{$item['qty']}\");";
@@ -87,7 +84,7 @@
 						//error_log("Query" . $query);
 						if ($conn->query($query) === TRUE) {
 							//Decrement inventory
-							$update = "UPDATE item SET inventory = inventory - {$item['qty']} + {$item['prev_qty']} WHERE id = {$item['item_id']}";
+							$update = "UPDATE item SET inventory = inventory - {$item['qty']} + {$prev_qty} WHERE id = {$item['item_id']}";
 							if ($conn->query($update) === TRUE) {
 								$successful = $successful && TRUE;
 							} else {//Error

@@ -1,13 +1,10 @@
 <?php 
+	require("apiCredentials.php");
 	if(!isset($_GET["user_id"]) && !isset($_GET["user_token"])){
 		//Change http response code 
 		http_response_code(400);
 		return;
 	}
-	$servername = "localhost";
-	$username = "CSI3540PHP";
-	$password = "Alpha2595!";
-	$dbname = "CSI3540DB";
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	$dateDDMMYYYY = date("d") . date("m") . date("Y");
 	// Check connection

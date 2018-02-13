@@ -1,8 +1,5 @@
 <?php
-	$servername = "localhost";
-	$username = "CSI3540PHP";
-	$password = "Alpha2595!";
-	$dbname = "CSI3540DB";
+	require("apiCredentials.php");
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	$dateDDMMYYYY = date("d") . date("m") . date("Y");
 	// Check connection
