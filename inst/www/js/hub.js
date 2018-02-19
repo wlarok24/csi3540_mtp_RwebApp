@@ -9,10 +9,11 @@ hub.consumptionGraphData = {
 	item_id : "",
 	data : {}
 };
-hub.drawGraph = function(data, minDate, maxDate){
+hub.drawGraph = function(data, minDate, maxDate, line){
 	//Draw graph
 	$.plot($("#graphZone"), data, {
 		grid : {
+			hoverable: true,
 			show : true,
 			color : "#00ccff"
 		}, xaxis : {
@@ -32,6 +33,14 @@ hub.drawGraph = function(data, minDate, maxDate){
 			sorted : "ascending",
 			position : "sw",
 			backgroundOpacity : 0.5
+		},
+		series: {
+			lines: {
+				show: line
+			},
+			points: {
+				show: true
+			}
 		}
 	});
 }
@@ -56,11 +65,15 @@ hub.refreshData = function(id, token){
 				$("#consumptionGraph-item").html($("#consumptionGraph-item").html() + "<option value=\"" + data[i].id + "\">" + data[i].name + "</option>");
 				//Prep graph data
 				var itemGraphData = [];
-				var today = Date.now();
+				var today = new Date();
+				today.setHours(0);
+				today.setMinutes(0);
+				today.setSeconds(0);
+				today.setMilliseconds(0); //Set to midnight
 				for(var j = 0; j <= 14; j++){
 					var y = Math.ceil(data[i].inventory/data[i].usual_use_size - data[i].model/data[i].usual_use_size*j);
 					if(y < 0){y = 0;}
-					itemGraphData.push([today + j * 24*60*60*1000, y]);
+					itemGraphData.push([today.getTime() + j * 24*60*60*1000, y]);
 				}
 				hub.predictionGraphData.push({
 					label : data[i].name,
@@ -73,7 +86,7 @@ hub.refreshData = function(id, token){
 			$("#graph-tabs").find(".nav-link").removeClass("active");
 			$("#consumptionGraph-toolbar").hide(); //Hide without animation
 			$("#inventoryGraph").addClass("active");
-			hub.drawGraph(hub.predictionGraphData, today, today + 14*24*60*60*1000);
+			hub.drawGraph(hub.predictionGraphData, today.getTime(), today.getTime() + 14*24*60*60*1000, true);
 		},
 		error : function(data){
 			swal("Error", "There was an error during the call.<br>" + data.message, "error");
@@ -121,8 +134,12 @@ hub.getUseArchiveData = function(user_id, token, item_id, item_name){
 				data : graphData,
 				bars: { show: true }
 			}];
-			var today = Date.now();
-			hub.drawGraph(hub.consumptionGraphData.data, today - 14*24*60*60*1000, today);
+			var today = new Date();
+			today.setHours(0);
+			today.setMinutes(0);
+			today.setSeconds(0);
+			today.setMilliseconds(0); //Set to midnight
+			hub.drawGraph(hub.consumptionGraphData.data, today.getTime() - 14*24*60*60*1000, today.getTime(), false);
 		},
 		error : function(data){
 			swal("Error", "There was an error during the call.<br>" + data.message, "error");
@@ -339,16 +356,26 @@ $(document).ready(function(){
 		$("#consumptionGraph-toolbar").hide(500); //Hide with animation
 		$(this).addClass("active");
 		//Redraw graph (next 14 days)
-		var today = Date.now();
-		hub.drawGraph(hub.predictionGraphData, today, today + 14*24*60*60*1000);
+		var today = new Date();
+		today.setHours(0);
+		today.setMinutes(0);
+		today.setSeconds(0);
+		today.setMilliseconds(0); //Set to midnight
+		hub.drawGraph(hub.predictionGraphData, today.getTime(), today.getTime() + 14*24*60*60*1000, true);
+		$("#graphTooltip").removeClass("consumption").addClass("inventory");
 	});
 	$("#consumptionGraph").click(function(){
 		$("#graph-tabs").find(".nav-link").removeClass("active");
 		$("#consumptionGraph-toolbar").show(500); //Show with animation
 		$(this).addClass("active");
 		//Redraw graph (past 14 days)
-		var today = Date.now();
-		hub.drawGraph(hub.consumptionGraphData.data, today - + 14*24*60*60*1000, today);
+		var today = new Date();
+		today.setHours(0);
+		today.setMinutes(0);
+		today.setSeconds(0);
+		today.setMilliseconds(0); //Set to midnight
+		hub.drawGraph(hub.consumptionGraphData.data, today.getTime() - + 14*24*60*60*1000, today.getTime(), false);
+		$("#graphTooltip").removeClass("inventory").addClass("consumption");
 	});
 	$("#consumptionGraph-draw").click(function(){
 		var item_id = $("#consumptionGraph-item").val();
@@ -359,4 +386,28 @@ $(document).ready(function(){
 			hub.getUseArchiveData(id, token, item_id, name);
 		}
 	});
+	
+	//Graph interactivity (Based on : www.flotcharts.org/flot/examples/interacting/index.html)
+	$("<div id='graphTooltip' class='inventory'></div>").appendTo("body");
+	$("#graphZone").bind("plothover", function (event, pos, item) {
+			if (item) {
+				//console.log(item);
+				var x = item.datapoint[0].toFixed(2),
+					y = item.datapoint[1].toFixed(2),
+					tooltip = $("#graphTooltip");
+				if (tooltip.hasClass("inventory")){
+					//console.log(item);
+					var i = item.seriesIndex;
+					var zero = Math.ceil((hub.data[i].inventory/ hub.data[i].usual_use_size) / (hub.data[i].model / hub.data[i].usual_use_size));
+					
+					tooltip.html("You will run out of " + item.series.label + " in " + zero + " days.")
+					.css({top: item.pageY+5, left: item.pageX+5, "background-color" : item.series.color})
+					.fadeIn(200);
+				} else if (tooltip.hasClass("consumption")){
+					$("#graphTooltip").hide();
+				}
+			} else {
+				$("#graphTooltip").hide();
+			}
+		});
 });

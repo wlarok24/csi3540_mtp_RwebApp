@@ -19,6 +19,16 @@
 #graph-tabs-parent .under-nav {
 	padding : 10px 20px 20px 20px;
 }
+#graphTooltip{
+		position: absolute;
+		display: none;
+		border: 1px solid rgb(0,0,0);
+		border-radius : 4px;
+		padding: 2px;
+		background-color : rgb(0,204,255); /* Default color */
+		color : rgb(0,0,0);
+		opacity: 0.80
+}
 #graph-tabs {
 	margin-top : -1px;
 	background-color : transparent;

@@ -4,6 +4,9 @@
 # Based on https://github.com/rwebapps/tvscore/blob/master/R/tv.R
 
 updateModels <- function(item_id, credentialPath){
+	# item_id = 6
+	# credentialPath = "C:/Projects/csi3540_mtp_RwebApp/data/RDBCredentials.csv"
+	
 	# Package import
 	library(car)
 	library(MASS)
@@ -14,24 +17,51 @@ updateModels <- function(item_id, credentialPath){
 	stopifnot(is.character(credentialPath) && file.exists(credentialPath))
 	
 	# Connect to database
-	credentials = read.csv("C:/Projects/csi3540_mtp_RwebApp/data/RDBCredentials.csv", header=TRUE, sep="\t")
+	credentials = read.csv(credentialPath, header=TRUE, sep="\t")
 	db = dbConnect(MySQL(), user=toString(credentials$username), password=toString(credentials$password), dbname=toString(credentials$database), host=toString(credentials$host))
 	
 	# Get item data (including old model)
-	itemQuery = sprintf("SELECT id, name, slope_days, adj_R_squared, estimated_daily_use FROM item WHERE id = %d", 7)
-	itemQueryResult = dbSendQuery(db, itemQuery)
-	itemData = fetch(itemQueryResult, n=1)
+	itemQuery = sprintf("SELECT id, name, slope_days, adj_R_squared, estimated_daily_use FROM item WHERE id = %d", item_id)
+	itemData = dbGetQuery(db, itemQuery)
 
 	# Get item use data
-	itemUseQuery = sprintf("SELECT date_nbr, qty FROM item_use WHERE item_id = %d", 7)
-	useQueryResult = dbSendQuery(db, itemUseQuery)
-	useData = fetch(useQueryResult, n=-1)
+	itemUseQuery = sprintf("SELECT date_nbr, qty FROM item_use WHERE item_id = %d", item_id)
+	useData = dbGetQuery(db, itemUseQuery)
 
-	# Create new linear model with data (if n > ??)
+	# Create new linear model with data
 
+	# For this project, I will only have a variable (days)
+	# to create the regression model. In future versions, more
+	# variables could be added for better accuracy.
+
+	use = useData$qty
+	days = useData$date_nbr
+	lm = lm(use ~ days - 1) #'-1' is to remove the intercept from the model
+	slope_days = coef(summary(lm))["days", "Estimate"] # Get the model slope
+	adj_R_squared = summary(lm)$adj.r.squared # Get model adjusted R squared
 
 	# Compare to old model and update model if its better
-	
+	nullModel = is.na(itemData$slope_days) | is.na(itemData$adj_R_squared)
+	if(nullModel){
+		# Update database
+		updateQuery = sprintf("UPDATE item SET slope_days = %10.7f, adj_R_squared = %10.7f WHERE id = %d", slope_days, adj_R_squared*100, item_id)
+		dbSendQuery(db, updateQuery)
+	} else if(!nullModel){
+		# Create linear model with old model
+		oldlm = lm(use ~ I(itemData$slope_days * days) - 1)		
+		old_adj_R_squared = summary(oldlm)$adj.r.squared		
+		
+		if(adj_R_squared >= old_adj_R_squared){
+			# Update database
+			updateQuery = sprintf("UPDATE item SET slope_days = %10.7f, adj_R_squared = %10.7f WHERE id = %d", slope_days, adj_R_squared*100, item_id)
+			update = dbSendQuery(db, updateQuery)
+			dbClearResult(update)
+		}
+	}
 
+	# Close connections
+	all_cons <- dbListConnections(MySQL())
+    	for(con in all_cons) 
+      	dbDisconnect(con)
 }
 
