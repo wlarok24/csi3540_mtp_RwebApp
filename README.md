@@ -11,18 +11,34 @@ Numéro étudiant : 8397424
 Mon idée pour le projet est de créer un web app pour permettre de gérer notre inventaire de certains items dans la maison pour que le client puisse savoir quand ils doivent en acheter d'autres pour ne pas en manquer. Ce genre de service serait utile pour des items qu’on utilise régulièrement, mais pas assez pour être conscient de notre inventaire, comme des oignons, patates, papier de toilette, etc.
 
 ## Installation et Utilisation
-### Mockups
-Pour voir les mockups HTML et CSS, simplement ouvrir les fichiers avec un navigateur web.
-Veuiller noter que de cette manière les fonctionalités de "log in", "log out" ne fonctionne pas.
-De plus, vous ne pourrez pas tester les fonctionnalités de l'API PHP qui sont déjà programmée.
+### Installation serveur LAMP
+1. ([Installer serveur LAMP](https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-16-04))
+2. Transférer les fichiers du repo sur le serveur (si nécessaire)
+3. Modifier le fichier **deploy/rwebapp.ca.conf**
+  * Modifier le DocumentRoot vers le répertoire **www** du repo
+  * Modifier le nom du serveur (ServerName) si vous voulez
+  * Modifier l'alias du serveur (ServerAlias). Si vous utiliser un nom de domaine, assurer vous de modifier le fichier hôtes (hosts) de votre ordinateur.
+4. Déplacer **deploy/rwebapp.ca.conf** dans le répertoire **/etc/apache2/sites-available**
+5. Exécuter le fichier **deploy/dbcreate.sh** qui va créer la base de données et les *credentials*
+
+### Installation Single Use Server R server on Windows
+1. Installer R
+2. Installer RTools
+3. Ajouter R et RTools dans les variables d'environnement (*Path*)
+4. Chercher le répertoire **csi3540RwebApp** du LAMP server
+5. Rebâtir le *R package* pour le projet
+  * Exécuter la commande **R CMD build csi3540RwebApp**
+6. Ouvrir R
+7. Installer les *packages* **opencpu, RMySQL, car, MASS** avec la commande **install.package(<package name>)**
+8. Installer **csi3540RwebApp** avec le fichier tar.gz et la commande **Install package(s) from local files** du menu **Packages**
 
 ### Fonctionalités principales
 * Coté Client
   * Navigation
     * Options pour usager logged-in ou logged out **(en développement)**
   * Hub
-    * Tableau des items (Mock data)
-    * Graphique de prédiction de l'inventaire (Mock data)
+    * Tableau des items (Mock data pour l'instant) **(en développement)**
+    * Graphique de prédiction de l'inventaire (Mock data pour l'instant) **(en développement)**
     * Graphique sur la consommation d'un item **(en développement)**
     * Connexion avec la base de données **(en développement)**
   * Sign up
@@ -38,9 +54,6 @@ De plus, vous ne pourrez pas tester les fonctionnalités de l'API PHP qui sont d
     * Usage d'items
   * R
     * Script pour modèles statistiques
-
-### Installation du projet sur un serveur
-À venir
 
 ## Architecture de développement
 ![Alt text](/docs/DevArchitecture.png "Architecture de développement")
