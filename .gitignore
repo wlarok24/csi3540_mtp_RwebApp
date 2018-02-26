@@ -1,3 +1,6 @@
 flot-0.8.3.zip
 www/api/apiCredentials.php
 csi3540RwebApp/data/RDBCredentials.RData
+deploy/test.sh
+deploy/test.csv
+deploy/test.php
