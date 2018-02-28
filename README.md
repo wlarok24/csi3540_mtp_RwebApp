@@ -12,14 +12,40 @@ Mon idée pour le projet est de créer un web app pour permettre de gérer notre
 
 ## Installation et Utilisation
 ### Installation serveur LAMP
-1. [Installer serveur LAMP](https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-16-04))
+1. [Installer serveur LAMP](https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-16-04)
 2. Transférer les fichiers du repo sur le serveur (si nécessaire)
 3. Modifier le fichier **deploy/rwebapp.ca.conf**
   * Modifier le DocumentRoot vers le répertoire **www** du repo
   * Modifier le nom du serveur (ServerName) si vous voulez
   * Modifier l'alias du serveur (ServerAlias). Si vous utiliser un nom de domaine, assurer vous de modifier le fichier hôtes (hosts) de votre ordinateur.
 4. Déplacer **deploy/rwebapp.ca.conf** dans le répertoire **/etc/apache2/sites-available**
-5. Exécuter le fichier **deploy/dbcreate.sh** qui va créer la base de données et les *credentials*
+5. Modifier le document **/etc/apache2/apache2.conf** pour donner accès à Apache au répertoire **csi3540_mtp_RwebApp/www**.
+  * Ajouter le code suivant avec les autres éléments **Directory** :
+  ```
+  <Directory path_to_repo/csi3540_mtp_RwebApp/www>
+   Options Indexes FollowSymLinks
+   AllowOverride None
+   Require all granted
+  </Directory>
+  ```
+6. Partir *MySQL* avec une des commandes suivantes :
+  > sudo service mysql start **ou** /etc/init.d/mysql start
+7. Exécuter le fichier **deploy/dbcreate.sh** qui va créer la base de données et les *credentials* avec la commande suivante:
+  > bash dbcreate.sh
+8. Déplacer les fichiers *credentials* dans les bons répertoires. **Important**
+  * **apiCredentials.php** va dans le répertoire **/www/du repo.
+  * **RDBCredentials.csv** va dans le répertoire **csi3540RwebApp/data** du repo.
+9. Tester le serveur
+  * Partir le serveur apache avec :
+    > sudo service apache2 start
+  * Accéder au site avec l'addresse que vous avez choisi.
+  * Aller sur la page de "Sign up" et tenter de créer un compte.
+  * Si vous réussissez, tenter de vous connecter ("Log in").
+  * **Si vous ne réussissez pas les étapes c ou d, aller voir l'error log avec la commande suivante :**
+    > cat /var/log/apache2/error.log
+10. Fermer les serveurs avec les commandes suivantes :
+ > sudo service mysql stop **ou** /etc/init.d/mysql stop  
+ > sudo service apache2 stop
 
 ### Installation Single Use Server R server on Windows
 1. Installer [R](https://www.r-project.org/)
