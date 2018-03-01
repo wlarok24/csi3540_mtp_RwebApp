@@ -1,13 +1,10 @@
 <?php 
+	require("apiCredentials.php");
 	if(!isset($_GET["user_id"]) && !isset($_GET["user_token"])){
 		//Change http response code 
 		http_response_code(400);
 		return;
 	}
-	$servername = "localhost";
-	$username = "CSI3540PHP";
-	$password = "Alpha2595!";
-	$dbname = "CSI3540DB";
 	$conn = new mysqli($servername, $username, $password, $dbname);
 	$dateDDMMYYYY = date("d") . date("m") . date("Y");
 	// Check connection
@@ -26,7 +23,8 @@
 		} else {
 			//API implementation
 			if($_SERVER['REQUEST_METHOD'] == 'GET'){
-				$select = "SELECT * FROM item WHERE user_id = {$_GET["user_id"]}";
+				$select = "SELECT id, name, inventory, unit, usual_use_size, IF(slope_days IS NOT NULL, slope_days, estimated_daily_use) as model, tracked_since
+					FROM item WHERE user_id = {$_GET["user_id"]}";
 				$result = mysqli_fetch_all($conn->query($select), MYSQLI_ASSOC);
 				header('Content-Type: application/json');
 				echo json_encode($result);
@@ -55,6 +53,24 @@
 					if ($conn->query($delete) === TRUE) {
 						//Change http response code 
 						http_response_code(204);
+					} else {//Error
+						//Change http response code 
+						header('HTTP/1.1 500 Internal server error');
+						echo json_encode(["message" =>  "An error occurred during the procedure."]);
+					}
+				} else {
+					//Change http response code 
+					http_response_code(400);//Bad request
+				}
+			} else if ($_SERVER['REQUEST_METHOD'] == 'PATCH'){
+				//Will use the url to pass the information (can use $_GET)
+				$id = $_GET['item_id'];
+				$qty = $_GET['item_qty'];
+				if(isset($id)){
+					$update = "UPDATE item SET inventory = {$qty} WHERE id = {$id}";
+					if ($conn->query($update) === TRUE) {
+						//Change http response code 
+						http_response_code(200);
 					} else {//Error
 						//Change http response code 
 						header('HTTP/1.1 500 Internal server error');

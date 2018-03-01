@@ -21,7 +21,8 @@ $(document).ready(function(){
 				statusCode : {
 					200 : function(data){ //Log in successful
 						//Hide login modal
-						$("[data-dismiss=modal]").trigger({ type: "click" });
+						//$("[data-dismiss=modal]").trigger({ type: "click" });
+						$("#login-modal").modal('hide');
 						if($("#login-rememberme").is(':checked')){
 							//Remember me is checked, thus I will store the data in localStorage
 							localStorage.setItem("user_id", data.user_id);
@@ -35,14 +36,14 @@ $(document).ready(function(){
 							sessionStorage.setItem("user_name", data.user_name);
 							sessionStorage.setItem("user_token", data.user_token);
 						}
-						$("#navbarDropdownMenuLink").html(data.user_name);
+						$("#navMenuButton").html(data.user_name);
 						$(".signed-in").show();
 						$(".signed-out").hide();
 					}
 				},
 				error : function(data){ //Log in unsuccessful
 					//Hide login modal
-					$("[data-dismiss=modal]").trigger({ type: "click" });
+					$("#login-modal").modal('hide');
 					swal("Error", "There was an error during the call.<br>" + data.responseJSON.message, "error");
 				}
 			});

@@ -33,7 +33,7 @@ $(document).ready(function(){
 			context : document.body,
 			statusCode : {
 				200 : function(data){ //Sign up successful
-					swal("Success!", "You are signed up!", "success");
+					swal("Success!", "Password changed successfully!", "success");
 				}
 			},
 			error : function(data){ //Sign up unsuccessful

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Placeholder - My Hub</title>
+	<title>R Web App - My Hub</title>
 	<meta charset="utf-8">
 	<!-- stylesheets and javascripts imports -->
 	  <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -15,13 +15,14 @@
 	  <script type="text/javascript" src="js/flot/jquery.flot.js"></script>
 	  <script type="text/javascript" src="js/flot/jquery.flot.resize.js"></script>
 	  <script type="text/javascript" src="js/flot/jquery.flot.time.js"></script>
+	  <script type="text/javascript" src="js/opencpu-0.4.js"></script>
 	  <script type="text/javascript" src="js/session.js"></script>
 	  <script type="text/javascript" src="js/hub.js"></script>
 </head>
 <body class="bg-dark themeText">
 <!-- Navigation bar -->
 <nav class="navbar navbar-expand-sm bg-theme navbar-light fixed-top">
-	<a class="navbar-brand" href="index.html">Placeholder Title</a>
+	<a class="navbar-brand" href="index.html">R Web App</a>
 	<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -34,7 +35,7 @@
 				<a class="nav-link btn btn-theme blackText" href="#graph">Graph reports</a>
 			</li>
 			<li class="nav-item dropdown signed-in">
-			  <a class="nav-link btn btn-theme blackText dropdown-toggle" type="button" id="navMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			  <a class="nav-link btn btn-theme blackText dropdown-toggle" href="#" id="navMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				Your name (if signed in)
 			  </a>
 			  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navMenuButton">
@@ -50,7 +51,7 @@
 <div class="modal" tabindex="-1" role="dialog" id="item-modal">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content bg-dark whiteText">
-      <form action="index.html" method="post">
+      <form>
 		  <div class="modal-header">
 			<h5 class="modal-title">Add an item</h5>
 			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -60,27 +61,61 @@
 		  <div class="modal-body" id="item-form">
 			  <div class="form-group whiteText">
 				<label for="item-name">Item name</label>
-				<input type="text" class="form-control bg-dark" placeholder="Enter Name" id="item-name" name="item-name" required>
+				<input type="text" class="form-control bg-dark" R Web App="Enter Name" id="item-name" name="item-name" required>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-unit">Unit of measurement</label>
-				<input type="text" class="form-control bg-dark" placeholder="Enter unit (unit, mL, g, etc)" id="item-unit" name="item-unit" required>
+				<input type="text" class="form-control bg-dark" R Web App="Enter unit (unit, mL, g, etc)" id="item-unit" name="item-unit" required>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-size">Usual use size</label>
-				<input type="number" class="form-control bg-dark" placeholder="Enter usual use size" id="item-size" name="item-size" required>
+				<input type="number" class="form-control bg-dark" R Web App="Enter usual use size" id="item-size" name="item-size" required>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-inventory">Inventory</label>
-				<input type="number" class="form-control bg-dark" placeholder="Enter your current inventory" id="item-inventory" name="item-inventory" required>
+				<input type="number" class="form-control bg-dark" R Web App="Enter your current inventory" id="item-inventory" name="item-inventory" required>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-estimate">Estimated daily use</label>
-				<input type="number" class="form-control bg-dark" placeholder="Enter your estimated daily use" id="item-estimate" name="item-estimate" required>
+				<input type="number" class="form-control bg-dark" R Web App="Enter your estimated daily use" id="item-estimate" name="item-estimate" required>
 			  </div>
 		  </div>
 		  <div class="modal-footer">
 			<button type="button" class="btn btn-theme" id='add-item'>Add item</button>
+			<button type="button" class="btn btn-theme" data-dismiss="modal">Cancel</button>
+		  </div>
+	  </form>
+    </div>
+  </div>
+</div>
+
+<!-- Change inventory modal -->
+<div class="modal" tabindex="-1" role="dialog" id="inventory-modal">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-dark whiteText">
+      <form>
+		  <div class="modal-header">
+			<h5 class="modal-title">Change inventory - <text class="inventory-name"></text></h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body" id="item-form">
+				<div class="alert alert-warning" role="alert">
+					<strong>This does not count towards the item's use. If you want to submit that information, use the "Submit use" button instead.</strong>
+				</div>
+				<div class="form-group whiteText">
+					<label for="inventory-qty">New inventory of <strong class="inventory-name"></strong></label>
+					<div class="input-group">
+						<input type="number" class="form-control bg-dark" R Web App="Enter your current inventory" id="inventory-qty" name="item-inventory" required>
+						<div class="input-group-append">
+							<div class="input-group-text bg-theme" id="inventory-unit"></div>
+						</div>
+					</div>
+				</div>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-theme" id='inventory-update'>Update</button>
 			<button type="button" class="btn btn-theme" data-dismiss="modal">Cancel</button>
 		  </div>
 	  </form>
@@ -115,7 +150,7 @@
 							<th>Today's use</th>
 						</tr></tfoot>
 					</table></div>
-				<div class="btn-group">
+				<div class="btn-group theme-btn-group">
 					<button type="button" class="btn btn-theme" name='add_item' id='add_item' data-toggle="modal" data-target="#item-modal">Add</button>
 					<button type="button" class="btn btn-theme" name='change_item_inventory' id='change_item_inventory'>Change inventory</button>
 					<button type="button" class="btn btn-theme" name='remove_item' id='remove_item'>Remove</button>
@@ -128,10 +163,35 @@
 	<div class="col-12">
 		<div class="card text-center" id="cards-hub">
 			<div class="card-header bg-theme">
-				<h3 class="blackText" id="graph">Graphic reports</h3>
+				<h3 class="blackText" id="graph">Graph reports</h3>
 			</div>
-			<div class="card-body flot-container bg-dark whiteText">
-				<div id="graphZone" class="flot"></div>
+			<div class="card-body flot-container bg-dark whiteText" id="graph-tabs-parent">
+				<ul class="nav nav-tabs nav-fill" id="graph-tabs">
+					<li class="nav-item">
+						<a href="#graph"  class="nav-link active" id="inventoryGraph">Inventory</a>
+					</li>
+					<li class="nav-item">
+						<a href="#graph"  class="nav-link" id="consumptionGraph">Consumption</a>
+					</li>
+				</ul>
+				<div class="under-nav">
+					<div class="btn-toolbar" role="toolbar" id="consumptionGraph-toolbar">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text bg-theme" id="btnGroupAddon">Choose an item</div>
+							</div>
+							<select class="form-control bg-dark" id="consumptionGraph-item">
+								<option>Test 1</option>
+								<option>Test 2</option>
+								<option>Test 3</option>
+							</select>
+							<div class="input-group-append">
+								<button type="button" class="btn btn-theme" id="consumptionGraph-draw">Draw</button>
+							</div>
+						</div>
+					</div>
+					<div id="graphZone" class="flot"></div>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -1,0 +1,13 @@
+Package: csi3540RwebApp
+Type: Package
+Title: CSI3540 R Web App package
+Version: 1.0
+Date: 2018-02-22
+Author: William LaRocque <wlaro029@uottawa.ca>
+Maintainer: William LaRocque <wlaro029@uottawa.ca>
+Description: R package for a Web App who tracks user consumption of item to tell them when they will run out.
+License: Don't know (This is a university project)
+Depends:
+	R (>= 3.2.3)
+Imports:
+	RMySQL
