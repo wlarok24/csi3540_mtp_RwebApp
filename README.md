@@ -86,6 +86,7 @@ Mon idée pour le projet est de créer un web app pour permettre de gérer notre
 
 ## Strucure de l'archive
 ![Alt text](/docs/RepoHierarchy.png "Strucure de l'archive")
+![Alt text](/docs/RPkgHierarchy.png "Strucure du package R")
 
 ## Technologies utilisés
 * HTML5
@@ -101,5 +102,5 @@ Mon idée pour le projet est de créer un web app pour permettre de gérer notre
   * Apache 2
   * MySQL
   * PHP7
-* R (Côté serveur et client (si nécessaire))
+* R (Côté serveur et client)
   * [OpenCPU](https://www.opencpu.org/)
