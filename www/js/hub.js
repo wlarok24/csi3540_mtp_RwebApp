@@ -59,10 +59,13 @@ hub.refreshData = function(id, token){
 			$("#hub_table_body").empty(); //Empty the table
 			$("#consumptionGraph-item").html("<option value=\"\"></value>"); //Reset item select
 			for(var i = 0; i < data.length; i++){
+				var zero =  Math.ceil((hub.data[i].inventory/ hub.data[i].usual_use_size) / (hub.data[i].model / hub.data[i].usual_use_size));
+				
 				$("#hub_table_body").html($("#hub_table_body").html() + 
-					"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-pos=\"" + i + "\" data-id=\"" + data[i].id + "\" data-name=\"" + data[i].name + "\">" +
-					data[i].name + "</td><td>" + data[i].inventory + " " +  data[i].unit + "</td><td>" + data[i].usual_use_size + " " +  data[i].unit + 
-					"</td><td><input type=\"number\" class=\"form-control bg-dark item_use\" id=\"item_use_" + data[i].id + "\" data-pos=\"" + i + "\"value=0></td></tr>"
+					"<tr class=\"hub_table_row\"><td>" + data[i].name + "</td><td><div class=\"btn-group theme-btn-group\"><button data-pos=\"" + i + "\" class=\"btn btn-theme change_item_inventory\" href=\"#\">Change inventory</button>" +
+					"<button data-pos=\"" + i + "\" class=\"btn btn-theme remove_item\" href=\"#\">Delete</button></div></td><td>" + data[i].inventory + " " +  data[i].unit + "</td><td>" + 
+					data[i].usual_use_size + " " +  data[i].unit + "</td><td>You will run out of " + data[i].name + " in " + zero + " days.</td>" + 
+					"<td><input type=\"number\" class=\"form-control bg-dark item_use\" id=\"item_use_" + data[i].id + "\" data-pos=\"" + i + "\"value=0></td></tr>"
 				); //add table row for the item
 				$("#consumptionGraph-item").html($("#consumptionGraph-item").html() + "<option value=\"" + data[i].id + "\">" + data[i].name + "</option>");
 				//Prep graph data
@@ -159,20 +162,21 @@ $(document).ready(function(){
 		token = localStorage.getItem("user_token");
 		hub.refreshData(id, token);
 	}
-	$("#remove_item").click(function(){
-		var radio_checked = $("input[name='item_radio']:checked");
-		if(radio_checked.length == 1){ //an item is checked
-			swal({
-			  title: 'Remove ' + radio_checked.data("name"),
-			  confirmButtonText: 'Yes',
-			  showCancelButton: true,
-			  cancelButtonText: 'No',
-			  text:
-				"Are you sure you want to remove " + radio_checked.data("name")+ "?",
-			  showLoaderOnConfirm: true
-			}).then(() => {//Confirm
-				 $.ajax({
-					url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + radio_checked.data("id"),
+	$("#hub_table_body").on("click", ".remove_item", function(e){
+		e.preventDefault(); //Prevent page refresh
+		var pos = $(this).data("pos");
+		swal({
+			title: 'Remove ' + hub.data[pos].name,
+			confirmButtonText: 'Yes',
+			showCancelButton: true,
+			cancelButtonText: 'No',
+			text:
+			"Are you sure you want to remove " + hub.data[pos].name + "?",
+			showLoaderOnConfirm: true
+		}).then((result) => {//Confirm
+			if(result.value){
+				$.ajax({
+					url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + hub.data[pos].id,
 					method : 'DELETE',
 					cache : false,
 					context : document.body,
@@ -186,22 +190,17 @@ $(document).ready(function(){
 					error : function(){ //Delete unsuccessful
 						swal("Error", "There was an error during the call.<br>" + data.message, "error");
 					}
-				 });
-			  });
-		} else {
-			swal("Error", "Please check an item.", "error");
-		}
+				});
+			}
+		});
 	});
 	// Change inventory
-	$("#change_item_inventory").click(function(){
-		var radio_checked = $("input[name='item_radio']:checked");
-		if(radio_checked.length == 1){ //an item is checked
-			$(".inventory-name").html(radio_checked.data("name"));
-			$("#inventory-unit").html(hub.data[radio_checked.data("pos")].unit);
-			$("#inventory-modal").modal('show');
-		} else {
-			swal("Error", "Please check an item.", "error");
-		}
+	$("#hub_table_body").on("click", ".change_item_inventory", function(e){
+		e.preventDefault(); //Prevent page refresh
+		var pos = $(this).data("pos");
+		$(".inventory-name").html(hub.data[pos].name);
+		$("#inventory-unit").html(hub.data[pos].unit);
+		$("#inventory-modal").modal('show');
 	});
 	$("#inventory-update").click(function(){
 		//inventory-qty
@@ -394,7 +393,7 @@ $(document).ready(function(){
 	});
 	
 	//Graph interactivity (Based on : www.flotcharts.org/flot/examples/interacting/index.html)
-	$("<div id='graphTooltip' class='inventory'></div>").appendTo("body");
+	/*$("<div id='graphTooltip' class='inventory'></div>").appendTo("body");
 	$("#graphZone").bind("plothover", function (event, pos, item) {
 			if (item) {
 				//console.log(item);
@@ -415,5 +414,5 @@ $(document).ready(function(){
 			} else {
 				$("#graphTooltip").hide();
 			}
-		});
+		});*/
 });
