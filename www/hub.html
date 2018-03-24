@@ -7,9 +7,9 @@
 	  <link rel="stylesheet" href="css/bootstrap.min.css">
 	  <link rel="stylesheet" href="css/theme.css">
 	  <link rel="stylesheet" href="css/hub.css">
-	  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-		  rel="stylesheet">-->
+
 	  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	  <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
 	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
 	  <script type="text/javascript" src="js/flot/jquery.flot.js"></script>
@@ -160,7 +160,7 @@
 						</tr></tfoot>
 					</table></div>
 				<div class="btn-group theme-btn-group">
-					<button type="button" class="btn btn-theme" name='add_item' id='add_item' data-toggle="modal" data-target="#item-modal">Add an item</button>
+					<button type="button" class="btn btn-theme" name='modal_add_item' id='modal_add_item'>Add an item</button>
 					<button type="button" class="btn btn-theme" name='submit_use' id='submit_use'>Submit today's use</button>
 				</div>
 				</form>
@@ -182,15 +182,23 @@
 					</li>
 				</ul>
 				<div class="under-nav">
+					<div class="btn-group" role="group" id="inventoryGraph-toolbar">
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-theme dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Choose items
+							</button>
+							<div class="dropdown-menu">
+								
+							</div>
+						</div>
+						<button type="button" class="btn btn-theme" id="inventoryGraph-draw">Draw</button>
+					</div>
 					<div class="btn-toolbar" role="toolbar" id="consumptionGraph-toolbar">
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<div class="input-group-text bg-theme" id="btnGroupAddon">Choose an item</div>
 							</div>
 							<select class="form-control bg-dark" id="consumptionGraph-item">
-								<option>Test 1</option>
-								<option>Test 2</option>
-								<option>Test 3</option>
 							</select>
 							<div class="input-group-append">
 								<button type="button" class="btn btn-theme" id="consumptionGraph-draw">Draw</button>

@@ -234,6 +234,7 @@ $(document).ready(function(){
 	});
 	
 	//Add item
+	$("#modal_add_item").click(function(){$("#item-modal").modal("show");});
 	$("#add-item").click(function(){//Click handler for add-item
 		//Check input validity
 		if($("#item-name").val() == "" || $("#item-unit").val() == "" || $("#item-size").val() == ""
@@ -359,6 +360,7 @@ $(document).ready(function(){
 	$("#inventoryGraph").click(function(){
 		$("#graph-tabs").find(".nav-link").removeClass("active");
 		$("#consumptionGraph-toolbar").hide(500); //Hide with animation
+		$("#inventoryGraph-toolbar").show(500); //Show with animation
 		$(this).addClass("active");
 		//Redraw graph (next 14 days)
 		var today = new Date();
@@ -372,6 +374,7 @@ $(document).ready(function(){
 	$("#consumptionGraph").click(function(){
 		$("#graph-tabs").find(".nav-link").removeClass("active");
 		$("#consumptionGraph-toolbar").show(500); //Show with animation
+		$("#inventoryGraph-toolbar").hide(500); //Hide with animation
 		$(this).addClass("active");
 		//Redraw graph (past 14 days)
 		var today = new Date();
