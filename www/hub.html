@@ -67,12 +67,16 @@
 				<label for="item-unit">Unit of measurement</label>
 				<input type="text" class="form-control bg-dark" placeholder="Enter unit (unit, mL, g, etc)" id="item-unit" name="item-unit" required>
 				<small id="unitHelpBlock" class="form-text text-muted">
-					
+					Please note that the use data ranges from 0 to 999.999999. Thus, you should use a unit that represents your use within that range.
 				</small>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-size">Usual use size</label>
 				<input type="number" class="form-control bg-dark" placeholder="Enter usual use size" id="item-size" name="item-size" required>
+				<small id="unitHelpBlock" class="form-text text-muted">
+					Eg: If you usually use 250 mL of an item daily and an item's unit is mL, your usual use size would be 250.
+					If that same item has a unit of L, your usual size would be 0.250.
+				</small>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-inventory">Inventory</label>
@@ -82,7 +86,7 @@
 				<label for="item-estimate">Estimated daily use</label>
 				<input type="number" class="form-control bg-dark" placeholder="Enter your estimated daily use" id="item-estimate" name="item-estimate" required>
 				<small id="useHelpBlock" class="form-text text-muted">
-					
+					Please note that the use data ranges from 0 to 999.999999.
 				</small>
 			  </div>
 		  </div>
@@ -187,8 +191,7 @@
 							<button type="button" class="btn btn-theme dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 								Choose items
 							</button>
-							<div class="dropdown-menu">
-								
+							<div class="dropdown-menu" id="inventoryGraph-items">
 							</div>
 						</div>
 						<button type="button" class="btn btn-theme" id="inventoryGraph-draw">Draw</button>

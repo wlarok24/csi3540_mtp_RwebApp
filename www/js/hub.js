@@ -3,9 +3,15 @@
 */
 // Set opencpu  OpenCPU 
 ocpu.seturl("http://localhost:5656/ocpu/library/csi3540RwebApp/R");
+var today = new Date();
+today.setHours(0);
+today.setMinutes(0);
+today.setSeconds(0);
+today.setMilliseconds(0); //Set to midnight
 var hub = hub || {};
 hub.data = [];
 hub.useData = [];
+hub.predictionData = [];
 hub.predictionGraphData = [];
 hub.consumptionGraphData = {
 	item_id : "",
@@ -38,7 +44,7 @@ hub.drawGraph = function(data, minDate, maxDate, line){
 		},
 		series: {
 			lines: {
-				show: line
+				show: true
 			},
 			points: {
 				show: true
@@ -55,8 +61,10 @@ hub.refreshData = function(id, token){
 		success : function(data){
 			hub.data = data; //Refresh data
 			hub.useData = new Array(data.length);
+			hub.predictionData = [];
 			hub.predictionGraphData = [];
 			$("#hub_table_body").empty(); //Empty the table
+			$("#inventoryGraph-items").empty();
 			$("#consumptionGraph-item").html("<option value=\"\"></value>"); //Reset item select
 			for(var i = 0; i < data.length; i++){
 				var zero =  Math.ceil((hub.data[i].inventory/ hub.data[i].usual_use_size) / (hub.data[i].model / hub.data[i].usual_use_size));
@@ -67,24 +75,29 @@ hub.refreshData = function(id, token){
 					data[i].usual_use_size + " " +  data[i].unit + "</td><td>You will run out of " + data[i].name + " in " + zero + " days.</td>" + 
 					"<td><input type=\"number\" class=\"form-control bg-dark item_use\" id=\"item_use_" + data[i].id + "\" data-pos=\"" + i + "\"value=0></td></tr>"
 				); //add table row for the item
+				//Add item in graph selection fields
+				let checked = (i < 5)? "checked": "";
+				$("#inventoryGraph-items").html( $("#inventoryGraph-items").html() + "<div class=\"form-check dropdown-item\" id=\"" + i + "\">" +
+									"<input type=\"checkbox\" class=\"form-check-input\" name=\"graph-items\" id=\"graph-items-" + i + "\" value=" + i + " " + checked + ">" +
+									"<label class=\"form-check-label\" for=\"graph-items-" + i + "\">" +
+										data[i].name + "</label></div>");
 				$("#consumptionGraph-item").html($("#consumptionGraph-item").html() + "<option value=\"" + data[i].id + "\">" + data[i].name + "</option>");
 				//Prep graph data
 				var itemGraphData = [];
-				var today = new Date();
-				today.setHours(0);
-				today.setMinutes(0);
-				today.setSeconds(0);
-				today.setMilliseconds(0); //Set to midnight
 				for(var j = 0; j <= 14; j++){
 					var y = Math.ceil(data[i].inventory/data[i].usual_use_size - data[i].model/data[i].usual_use_size*j);
 					if(y < 0){y = 0;}
 					itemGraphData.push([today.getTime() + j * 24*60*60*1000, y]);
 				}
-				hub.predictionGraphData.push({
-					label : data[i].name,
-					data : itemGraphData,
-					lines : {line : true, fill : false}
-				});
+				/*The first 5 items will automatically be in the inventory graph*/
+				hub.predictionData.push(itemGraphData);
+				if(i < 5){
+					hub.predictionGraphData.push({
+						label : data[i].name,
+						data : itemGraphData,
+						lines : {line : true, fill : false}
+					});
+				}
 				hub.getTodaysItemUse(id, token, data[i]);
 			}
 			//Draw inventory graph
@@ -139,11 +152,6 @@ hub.getUseArchiveData = function(user_id, token, item_id, item_name){
 				data : graphData,
 				bars: { show: true }
 			}];
-			var today = new Date();
-			today.setHours(0);
-			today.setMinutes(0);
-			today.setSeconds(0);
-			today.setMilliseconds(0); //Set to midnight
 			hub.drawGraph(hub.consumptionGraphData.data, today.getTime() - 14*24*60*60*1000, today.getTime(), false);
 		},
 		error : function(data){
@@ -250,6 +258,8 @@ $(document).ready(function(){
 			swal("Error", "The inventory or the item size are not integers.", "error");
 		} else if ($("#item-estimate").val() <= 0 || $("#item-size").val() <= 0){
 			swal("Error", "The usual use size and estimated daily use cannot be zero or negative.", "error");
+		} else if($("#item-estimate").val() >= 1000){
+			swal("Error", "The usual use size has a maximal value of 999.999999.", "error");
 		} else if ($("#item-inventory").val() < 0){
 			swal("Error", "The inventory cannot be negative.", "error");
 		} else {
@@ -363,13 +373,31 @@ $(document).ready(function(){
 		$("#inventoryGraph-toolbar").show(500); //Show with animation
 		$(this).addClass("active");
 		//Redraw graph (next 14 days)
-		var today = new Date();
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
-		today.setMilliseconds(0); //Set to midnight
 		hub.drawGraph(hub.predictionGraphData, today.getTime(), today.getTime() + 14*24*60*60*1000, true);
 		$("#graphTooltip").removeClass("consumption").addClass("inventory");
+	});
+	$("#inventoryGraph-items").on("click", function(e){
+		e.stopPropagation(); //Stop dropdown close on click
+	});
+	$("#inventoryGraph-items").on("click", ".dropdown-item", function(e){
+		if(e.target.tagName == "DIV"){//if what is clicked is only the div
+			var check = document.getElementById("graph-items-" + this.id);
+			check.checked = !check.checked; //toggle checkbox value
+		}
+	});
+	$("#inventoryGraph-draw").click(function(){
+		hub.predictionGraphData = [];
+		var checkboxes = document.getElementsByName("graph-items");
+		for(var i = 0; i < checkboxes.length; i++){
+			if(checkboxes[i].checked){
+				hub.predictionGraphData.push({
+					label : hub.data[i].name,
+					data : hub.predictionData[i],
+					lines : {line : true, fill : false}
+				});
+			}	
+		}
+		hub.drawGraph(hub.predictionGraphData, today.getTime(), today.getTime() + 14*24*60*60*1000, true);
 	});
 	$("#consumptionGraph").click(function(){
 		$("#graph-tabs").find(".nav-link").removeClass("active");
@@ -377,11 +405,6 @@ $(document).ready(function(){
 		$("#inventoryGraph-toolbar").hide(500); //Hide with animation
 		$(this).addClass("active");
 		//Redraw graph (past 14 days)
-		var today = new Date();
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
-		today.setMilliseconds(0); //Set to midnight
 		hub.drawGraph(hub.consumptionGraphData.data, today.getTime() - + 14*24*60*60*1000, today.getTime(), false);
 		$("#graphTooltip").removeClass("inventory").addClass("consumption");
 	});
