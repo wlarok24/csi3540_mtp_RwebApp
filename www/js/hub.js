@@ -419,19 +419,17 @@ $(document).ready(function(){
 	});
 	
 	//Graph interactivity (Based on : www.flotcharts.org/flot/examples/interacting/index.html)
-	/*$("<div id='graphTooltip' class='inventory'></div>").appendTo("body");
+	$("<div id='graphTooltip' class='inventory'></div>").appendTo("body");
 	$("#graphZone").bind("plothover", function (event, pos, item) {
 			if (item) {
 				//console.log(item);
-				var x = item.datapoint[0].toFixed(2),
-					y = item.datapoint[1].toFixed(2),
+				var x = item.datapoint[0].toFixed(0),
+					y = item.datapoint[1].toFixed(6),
 					tooltip = $("#graphTooltip");
 				if (tooltip.hasClass("inventory")){
 					//console.log(item);
 					var i = item.seriesIndex;
-					var zero = Math.ceil((hub.data[i].inventory/ hub.data[i].usual_use_size) / (hub.data[i].model / hub.data[i].usual_use_size));
-					
-					tooltip.html("You will run out of " + item.series.label + " in " + zero + " days.")
+					tooltip.html("Estimate of " + item.series.label + "<br>Date: " + (new Date(parseInt(x))).toLocaleDateString() + "<br>Inventory : " + (y * hub.data[i].usual_use_size) + " " + hub.data[i].unit)
 					.css({top: item.pageY+5, left: item.pageX+5, "background-color" : item.series.color})
 					.fadeIn(200);
 				} else if (tooltip.hasClass("consumption")){
@@ -440,5 +438,5 @@ $(document).ready(function(){
 			} else {
 				$("#graphTooltip").hide();
 			}
-		});*/
+		});
 });
