@@ -7,9 +7,9 @@
 	  <link rel="stylesheet" href="css/bootstrap.min.css">
 	  <link rel="stylesheet" href="css/theme.css">
 	  <link rel="stylesheet" href="css/hub.css">
-	  <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-		  rel="stylesheet">-->
+
 	  <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	  <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
 	  <script type="text/javascript" src="js/bootstrap.min.js"></script>
 	  <script type="text/javascript" src="js/sweetalert2.all.js"></script>
 	  <script type="text/javascript" src="js/flot/jquery.flot.js"></script>
@@ -61,23 +61,33 @@
 		  <div class="modal-body" id="item-form">
 			  <div class="form-group whiteText">
 				<label for="item-name">Item name</label>
-				<input type="text" class="form-control bg-dark" R Web App="Enter Name" id="item-name" name="item-name" required>
+				<input type="text" class="form-control bg-dark" placeholder="Enter Name" id="item-name" name="item-name" required>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-unit">Unit of measurement</label>
-				<input type="text" class="form-control bg-dark" R Web App="Enter unit (unit, mL, g, etc)" id="item-unit" name="item-unit" required>
+				<input type="text" class="form-control bg-dark" placeholder="Enter unit (unit, mL, g, etc)" id="item-unit" name="item-unit" required>
+				<small id="unitHelpBlock" class="form-text text-muted">
+					Please note that the use data ranges from 0 to 999.999999. Thus, you should use a unit that represents your use within that range.
+				</small>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-size">Usual use size</label>
-				<input type="number" class="form-control bg-dark" R Web App="Enter usual use size" id="item-size" name="item-size" required>
+				<input type="number" class="form-control bg-dark" placeholder="Enter usual use size" id="item-size" name="item-size" required>
+				<small id="unitHelpBlock" class="form-text text-muted">
+					Eg: If you usually use 250 mL of an item daily and an item's unit is mL, your usual use size would be 250.
+					If that same item has a unit of L, your usual size would be 0.250.
+				</small>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-inventory">Inventory</label>
-				<input type="number" class="form-control bg-dark" R Web App="Enter your current inventory" id="item-inventory" name="item-inventory" required>
+				<input type="number" class="form-control bg-dark" placeholder="Enter your current inventory" id="item-inventory" name="item-inventory" required>
 			  </div>
 			  <div class="form-group whiteText">
 				<label for="item-estimate">Estimated daily use</label>
-				<input type="number" class="form-control bg-dark" R Web App="Enter your estimated daily use" id="item-estimate" name="item-estimate" required>
+				<input type="number" class="form-control bg-dark" placeholder="Enter your estimated daily use" id="item-estimate" name="item-estimate" required>
+				<small id="useHelpBlock" class="form-text text-muted">
+					Please note that the use data ranges from 0 to 999.999999.
+				</small>
 			  </div>
 		  </div>
 		  <div class="modal-footer">
@@ -106,8 +116,9 @@
 				</div>
 				<div class="form-group whiteText">
 					<label for="inventory-qty">New inventory of <strong class="inventory-name"></strong></label>
+					<input type="hidden" id="inventory-item-id" name="inventory-item-id"></input>
 					<div class="input-group">
-						<input type="number" class="form-control bg-dark" R Web App="Enter your current inventory" id="inventory-qty" name="item-inventory" required>
+						<input type="number" class="form-control bg-dark" placeholder="Enter your current inventory" id="inventory-qty" name="item-inventory" required>
 						<div class="input-group-append">
 							<div class="input-group-text bg-theme" id="inventory-unit"></div>
 						</div>
@@ -136,25 +147,25 @@
 				<form action="" method="post">
 					<div class="table-responsive"><table class="table">
 						<thead><tr>
-							<th>Item</th>
+							<th colspan="2">Item</th>
 							<th>Quantity</th>
 							<th>Usual use size</th>
+							<th>Empty stock estimation</th>
 							<th>Today's use</th>
 						</tr></thead>
 						<tbody id="hub_table_body">
 						</tbody>
 						<tfoot><tr>
-							<th>Item</th>
+							<th colspan="2">Item</th>
 							<th>Quantity</th>
 							<th>Usual use size</th>
+							<th>Empty stock estimation</th>
 							<th>Today's use</th>
 						</tr></tfoot>
 					</table></div>
 				<div class="btn-group theme-btn-group">
-					<button type="button" class="btn btn-theme" name='add_item' id='add_item' data-toggle="modal" data-target="#item-modal">Add</button>
-					<button type="button" class="btn btn-theme" name='change_item_inventory' id='change_item_inventory'>Change inventory</button>
-					<button type="button" class="btn btn-theme" name='remove_item' id='remove_item'>Remove</button>
-					<button type="button" class="btn btn-theme" name='submit_use' id='submit_use'>Submit use</button>
+					<button type="button" class="btn btn-theme" name='modal_add_item' id='modal_add_item'>Add an item</button>
+					<button type="button" class="btn btn-theme" name='submit_use' id='submit_use'>Submit today's use</button>
 				</div>
 				</form>
 			</div>
@@ -175,15 +186,22 @@
 					</li>
 				</ul>
 				<div class="under-nav">
+					<div class="btn-group" role="group" id="inventoryGraph-toolbar">
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-theme dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Choose items
+							</button>
+							<div class="dropdown-menu" id="inventoryGraph-items">
+							</div>
+						</div>
+						<button type="button" class="btn btn-theme" id="inventoryGraph-draw">Draw</button>
+					</div>
 					<div class="btn-toolbar" role="toolbar" id="consumptionGraph-toolbar">
 						<div class="input-group">
 							<div class="input-group-prepend">
 								<div class="input-group-text bg-theme" id="btnGroupAddon">Choose an item</div>
 							</div>
 							<select class="form-control bg-dark" id="consumptionGraph-item">
-								<option>Test 1</option>
-								<option>Test 2</option>
-								<option>Test 3</option>
 							</select>
 							<div class="input-group-append">
 								<button type="button" class="btn btn-theme" id="consumptionGraph-draw">Draw</button>

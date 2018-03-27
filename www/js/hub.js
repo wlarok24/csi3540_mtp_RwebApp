@@ -3,9 +3,15 @@
 */
 // Set opencpu  OpenCPU 
 ocpu.seturl("http://localhost:5656/ocpu/library/csi3540RwebApp/R");
+var today = new Date();
+today.setHours(0);
+today.setMinutes(0);
+today.setSeconds(0);
+today.setMilliseconds(0); //Set to midnight
 var hub = hub || {};
 hub.data = [];
 hub.useData = [];
+hub.predictionData = [];
 hub.predictionGraphData = [];
 hub.consumptionGraphData = {
 	item_id : "",
@@ -38,7 +44,7 @@ hub.drawGraph = function(data, minDate, maxDate, line){
 		},
 		series: {
 			lines: {
-				show: line
+				show: true
 			},
 			points: {
 				show: true
@@ -55,33 +61,43 @@ hub.refreshData = function(id, token){
 		success : function(data){
 			hub.data = data; //Refresh data
 			hub.useData = new Array(data.length);
+			hub.predictionData = [];
 			hub.predictionGraphData = [];
 			$("#hub_table_body").empty(); //Empty the table
+			$("#inventoryGraph-items").empty();
 			$("#consumptionGraph-item").html("<option value=\"\"></value>"); //Reset item select
 			for(var i = 0; i < data.length; i++){
+				var zero =  Math.ceil((hub.data[i].inventory/ hub.data[i].usual_use_size) / (hub.data[i].model / hub.data[i].usual_use_size));
+				
 				$("#hub_table_body").html($("#hub_table_body").html() + 
-					"<tr class=\"hub_table_row\"><td><input class=\"form-check-input\" type=\"radio\" name=\"item_radio\" value=\"\" class=\"check_item\" data-pos=\"" + i + "\" data-id=\"" + data[i].id + "\" data-name=\"" + data[i].name + "\">" +
-					data[i].name + "</td><td>" + data[i].inventory + " " +  data[i].unit + "</td><td>" + data[i].usual_use_size + " " +  data[i].unit + 
-					"</td><td><input type=\"number\" class=\"form-control bg-dark item_use\" id=\"item_use_" + data[i].id + "\" data-pos=\"" + i + "\"value=0></td></tr>"
+					"<tr class=\"hub_table_row\"><td>" + data[i].name + "</td><td><div class=\"btn-group theme-btn-group\"><button data-pos=\"" + i + "\" class=\"btn btn-theme change_item_inventory\" href=\"#\">Change inventory</button>" +
+					"<button data-pos=\"" + i + "\" class=\"btn btn-theme remove_item\" href=\"#\">Delete</button></div></td><td>" + data[i].inventory + " " +  data[i].unit + "</td><td>" + 
+					data[i].usual_use_size + " " +  data[i].unit + "</td><td>You will run out of " + data[i].name + " in " + zero + " days.</td>" + 
+					"<td><input type=\"number\" class=\"form-control bg-dark item_use\" id=\"item_use_" + data[i].id + "\" data-pos=\"" + i + "\"value=0></td></tr>"
 				); //add table row for the item
+				//Add item in graph selection fields
+				let checked = (i < 5)? "checked": "";
+				$("#inventoryGraph-items").html( $("#inventoryGraph-items").html() + "<div class=\"form-check dropdown-item\" id=\"" + i + "\">" +
+									"<input type=\"checkbox\" class=\"form-check-input\" name=\"graph-items\" id=\"graph-items-" + i + "\" value=" + i + " " + checked + ">" +
+									"<label class=\"form-check-label\" for=\"graph-items-" + i + "\">" +
+										data[i].name + "</label></div>");
 				$("#consumptionGraph-item").html($("#consumptionGraph-item").html() + "<option value=\"" + data[i].id + "\">" + data[i].name + "</option>");
 				//Prep graph data
 				var itemGraphData = [];
-				var today = new Date();
-				today.setHours(0);
-				today.setMinutes(0);
-				today.setSeconds(0);
-				today.setMilliseconds(0); //Set to midnight
 				for(var j = 0; j <= 14; j++){
 					var y = Math.ceil(data[i].inventory/data[i].usual_use_size - data[i].model/data[i].usual_use_size*j);
 					if(y < 0){y = 0;}
 					itemGraphData.push([today.getTime() + j * 24*60*60*1000, y]);
 				}
-				hub.predictionGraphData.push({
-					label : data[i].name,
-					data : itemGraphData,
-					lines : {line : true, fill : false}
-				});
+				/*The first 5 items will automatically be in the inventory graph*/
+				hub.predictionData.push(itemGraphData);
+				if(i < 5){
+					hub.predictionGraphData.push({
+						label : data[i].name,
+						data : itemGraphData,
+						lines : {line : true, fill : false}
+					});
+				}
 				hub.getTodaysItemUse(id, token, data[i]);
 			}
 			//Draw inventory graph
@@ -136,11 +152,6 @@ hub.getUseArchiveData = function(user_id, token, item_id, item_name){
 				data : graphData,
 				bars: { show: true }
 			}];
-			var today = new Date();
-			today.setHours(0);
-			today.setMinutes(0);
-			today.setSeconds(0);
-			today.setMilliseconds(0); //Set to midnight
 			hub.drawGraph(hub.consumptionGraphData.data, today.getTime() - 14*24*60*60*1000, today.getTime(), false);
 		},
 		error : function(data){
@@ -159,20 +170,21 @@ $(document).ready(function(){
 		token = localStorage.getItem("user_token");
 		hub.refreshData(id, token);
 	}
-	$("#remove_item").click(function(){
-		var radio_checked = $("input[name='item_radio']:checked");
-		if(radio_checked.length == 1){ //an item is checked
-			swal({
-			  title: 'Remove ' + radio_checked.data("name"),
-			  confirmButtonText: 'Yes',
-			  showCancelButton: true,
-			  cancelButtonText: 'No',
-			  text:
-				"Are you sure you want to remove " + radio_checked.data("name")+ "?",
-			  showLoaderOnConfirm: true
-			}).then(() => {//Confirm
-				 $.ajax({
-					url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + radio_checked.data("id"),
+	$("#hub_table_body").on("click", ".remove_item", function(e){
+		e.preventDefault(); //Prevent page refresh
+		var pos = $(this).data("pos");
+		swal({
+			title: 'Remove ' + hub.data[pos].name,
+			confirmButtonText: 'Yes',
+			showCancelButton: true,
+			cancelButtonText: 'No',
+			text:
+			"Are you sure you want to remove " + hub.data[pos].name + "?",
+			showLoaderOnConfirm: true
+		}).then((result) => {//Confirm
+			if(result.value){
+				$.ajax({
+					url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + hub.data[pos].id,
 					method : 'DELETE',
 					cache : false,
 					context : document.body,
@@ -186,22 +198,17 @@ $(document).ready(function(){
 					error : function(){ //Delete unsuccessful
 						swal("Error", "There was an error during the call.<br>" + data.message, "error");
 					}
-				 });
-			  });
-		} else {
-			swal("Error", "Please check an item.", "error");
-		}
+				});
+			}
+		});
 	});
 	// Change inventory
-	$("#change_item_inventory").click(function(){
-		var radio_checked = $("input[name='item_radio']:checked");
-		if(radio_checked.length == 1){ //an item is checked
-			$(".inventory-name").html(radio_checked.data("name"));
-			$("#inventory-unit").html(hub.data[radio_checked.data("pos")].unit);
-			$("#inventory-modal").modal('show');
-		} else {
-			swal("Error", "Please check an item.", "error");
-		}
+	$("#hub_table_body").on("click", ".change_item_inventory", function(e){
+		e.preventDefault(); //Prevent page refresh
+		var pos = $(this).data("pos");
+		$(".inventory-name").html(hub.data[pos].name);
+		$("#inventory-unit").html(hub.data[pos].unit);
+		$("#inventory-modal").modal('show');
 	});
 	$("#inventory-update").click(function(){
 		//inventory-qty
@@ -235,6 +242,7 @@ $(document).ready(function(){
 	});
 	
 	//Add item
+	$("#modal_add_item").click(function(){$("#item-modal").modal("show");});
 	$("#add-item").click(function(){//Click handler for add-item
 		//Check input validity
 		if($("#item-name").val() == "" || $("#item-unit").val() == "" || $("#item-size").val() == ""
@@ -250,6 +258,8 @@ $(document).ready(function(){
 			swal("Error", "The inventory or the item size are not integers.", "error");
 		} else if ($("#item-estimate").val() <= 0 || $("#item-size").val() <= 0){
 			swal("Error", "The usual use size and estimated daily use cannot be zero or negative.", "error");
+		} else if($("#item-estimate").val() >= 1000){
+			swal("Error", "The usual use size has a maximal value of 999.999999.", "error");
 		} else if ($("#item-inventory").val() < 0){
 			swal("Error", "The inventory cannot be negative.", "error");
 		} else {
@@ -360,26 +370,41 @@ $(document).ready(function(){
 	$("#inventoryGraph").click(function(){
 		$("#graph-tabs").find(".nav-link").removeClass("active");
 		$("#consumptionGraph-toolbar").hide(500); //Hide with animation
+		$("#inventoryGraph-toolbar").show(500); //Show with animation
 		$(this).addClass("active");
 		//Redraw graph (next 14 days)
-		var today = new Date();
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
-		today.setMilliseconds(0); //Set to midnight
 		hub.drawGraph(hub.predictionGraphData, today.getTime(), today.getTime() + 14*24*60*60*1000, true);
 		$("#graphTooltip").removeClass("consumption").addClass("inventory");
+	});
+	$("#inventoryGraph-items").on("click", function(e){
+		e.stopPropagation(); //Stop dropdown close on click
+	});
+	$("#inventoryGraph-items").on("click", ".dropdown-item", function(e){
+		if(e.target.tagName == "DIV"){//if what is clicked is only the div
+			var check = document.getElementById("graph-items-" + this.id);
+			check.checked = !check.checked; //toggle checkbox value
+		}
+	});
+	$("#inventoryGraph-draw").click(function(){
+		hub.predictionGraphData = [];
+		var checkboxes = document.getElementsByName("graph-items");
+		for(var i = 0; i < checkboxes.length; i++){
+			if(checkboxes[i].checked){
+				hub.predictionGraphData.push({
+					label : hub.data[i].name,
+					data : hub.predictionData[i],
+					lines : {line : true, fill : false}
+				});
+			}	
+		}
+		hub.drawGraph(hub.predictionGraphData, today.getTime(), today.getTime() + 14*24*60*60*1000, true);
 	});
 	$("#consumptionGraph").click(function(){
 		$("#graph-tabs").find(".nav-link").removeClass("active");
 		$("#consumptionGraph-toolbar").show(500); //Show with animation
+		$("#inventoryGraph-toolbar").hide(500); //Hide with animation
 		$(this).addClass("active");
 		//Redraw graph (past 14 days)
-		var today = new Date();
-		today.setHours(0);
-		today.setMinutes(0);
-		today.setSeconds(0);
-		today.setMilliseconds(0); //Set to midnight
 		hub.drawGraph(hub.consumptionGraphData.data, today.getTime() - + 14*24*60*60*1000, today.getTime(), false);
 		$("#graphTooltip").removeClass("inventory").addClass("consumption");
 	});
@@ -398,15 +423,13 @@ $(document).ready(function(){
 	$("#graphZone").bind("plothover", function (event, pos, item) {
 			if (item) {
 				//console.log(item);
-				var x = item.datapoint[0].toFixed(2),
-					y = item.datapoint[1].toFixed(2),
+				var x = item.datapoint[0].toFixed(0),
+					y = item.datapoint[1].toFixed(6),
 					tooltip = $("#graphTooltip");
 				if (tooltip.hasClass("inventory")){
 					//console.log(item);
 					var i = item.seriesIndex;
-					var zero = Math.ceil((hub.data[i].inventory/ hub.data[i].usual_use_size) / (hub.data[i].model / hub.data[i].usual_use_size));
-					
-					tooltip.html("You will run out of " + item.series.label + " in " + zero + " days.")
+					tooltip.html("Estimate of " + item.series.label + "<br>Date: " + (new Date(parseInt(x))).toLocaleDateString() + "<br>Inventory : " + (y * hub.data[i].usual_use_size) + " " + hub.data[i].unit)
 					.css({top: item.pageY+5, left: item.pageX+5, "background-color" : item.series.color})
 					.fadeIn(200);
 				} else if (tooltip.hasClass("consumption")){

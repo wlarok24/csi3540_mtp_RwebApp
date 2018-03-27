@@ -59,6 +59,10 @@
 }
 
 /* Graph consumptionGraph-toolbar css */
+#inventoryGraph-items .form-check{
+	padding-left : 36px; /* Create illusions check box is centered */ 
+	padding-right : 12px;
+}
 #consumptionGraph-toolbar{
 	display : flex;
 	justify-content: center;
