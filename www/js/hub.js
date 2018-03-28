@@ -2,7 +2,7 @@
 	JavaScript file for the hub page
 */
 // Set opencpu  OpenCPU 
-ocpu.seturl("http://localhost:5656/ocpu/library/csi3540RwebApp/R");
+//ocpu.seturl("http://localhost:5656/ocpu/library/csi3540RwebApp/R");
 var today = new Date();
 today.setHours(0);
 today.setMinutes(0);
@@ -349,9 +349,9 @@ $(document).ready(function(){
 					dataType : "json",
 					statusCode : {
 						201 : function(){
-							for(var i = 0; i < itemsToSend.length; i++){
+							/*for(var i = 0; i < itemsToSend.length; i++){
 								ocpu.call("updateModels", { item_id : itemsToSend[i].item_id});
-							}
+							}*/
 							// Success message
 							swal("Success", "Use data successfully added.", "success").then(() => {
 								hub.refreshData(id, token); //Refresh the data

@@ -87,6 +87,16 @@
 							$update = "UPDATE item SET inventory = inventory - {$item['qty']} + {$prev_qty} WHERE id = {$item['item_id']}";
 							if ($conn->query($update) === TRUE) {
 								$successful = $successful && TRUE;
+								
+								//Call updateModels on OpenCPU Server using curl
+								$Rcall = curl_init();
+								curl_setopt($Rcall, CURLOPT_URL, "https://wlarok.ca/ocpu/library/csi3540RwebApp/R/updateModels");
+								curl_setopt($Rcall, CURLOPT_POST, 1); //Call is POST
+								curl_setopt($Rcall, CURLOPT_POSTFIELDS, "item_id={$item['item_id']}"); //POST variables
+								curl_setopt($Rcall, CURLOPT_RETURNTRANSFER, false); //Will not wait for response (might be long)
+								curl_exec($Rcall); //Execute call
+								curl_close($Rcall); //Free resource
+								
 							} else {//Error
 								error_log(mysqli_error($conn));
 								$successful = $successful && FALSE;
