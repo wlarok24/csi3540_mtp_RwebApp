@@ -17,7 +17,7 @@ updateModels <- function(item_id){
 	data("RDBCredentials") # credentials will be in data frame RDBCredentials
 
 	# Connect to database
-	db = dbConnect(MySQL(), user=toString(RDBCredentials$username), password=toString(RDBCredentials$password), dbname=toString(RDBCredentials$database), host=toString(RDBCredentials$host))
+	db = dbConnect(MySQL(), user=toString(RDBCredentials$username), password=toString(RDBCredentials$password), dbname=toString(RDBCredentials$database), host="127.0.0.1") #toString(RDBCredentials$host))
 	
 	# Get item data (including old model)
 	itemQuery = sprintf("SELECT id, name, slope_days, adj_R_squared, estimated_daily_use FROM item WHERE id = %d", item_id)
