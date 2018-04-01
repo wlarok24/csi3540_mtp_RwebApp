@@ -32,7 +32,7 @@ $(document).ready(function(){
 				}
 			},
 			error : function(data){ //Sign up unsuccessful
-				swal("Error", "There was an error during the call.<br>" + data.message, "error");
+				swal("Error", "There was an error during the call.<br>Sorry for the inconvinence.", "error");
 			}
 		});
 	});
