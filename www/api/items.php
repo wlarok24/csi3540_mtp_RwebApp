@@ -39,8 +39,8 @@
 						//Change http response code 
 						http_response_code(201);
 					} else {//Error
-						error_log(mysqli_error($conn));
 						//Change http response code 
+						error_log(mysqli_error($conn));
 						header('HTTP/1.1 500 Internal server error');
 						echo json_encode(["message" =>  "An error occurred during the procedure." ]);
 					}
@@ -55,6 +55,7 @@
 						http_response_code(204);
 					} else {//Error
 						//Change http response code 
+						error_log(mysqli_error($conn));
 						header('HTTP/1.1 500 Internal server error');
 						echo json_encode(["message" =>  "An error occurred during the procedure."]);
 					}
@@ -66,13 +67,14 @@
 				//Will use the url to pass the information (can use $_GET)
 				$id = $_GET['item_id'];
 				$qty = $_GET['item_qty'];
-				if(isset($id)){
-					$update = "UPDATE item SET inventory = {$qty} WHERE id = {$id}";
+				if(isset($id)&&isset($qty)){
+					//$update = "UPDATE item SET inventory = {$qty} WHERE id = {$id}";
 					if ($conn->query($update) === TRUE) {
 						//Change http response code 
 						http_response_code(200);
 					} else {//Error
 						//Change http response code 
+						error_log(mysqli_error($conn));
 						header('HTTP/1.1 500 Internal server error');
 						echo json_encode(["message" =>  "An error occurred during the procedure."]);
 					}

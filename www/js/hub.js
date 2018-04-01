@@ -1,8 +1,6 @@
 /*
 	JavaScript file for the hub page
 */
-// Set opencpu  OpenCPU 
-ocpu.seturl("http://localhost:5656/ocpu/library/csi3540RwebApp/R");
 var today = new Date();
 today.setHours(0);
 today.setMinutes(0);
@@ -107,7 +105,7 @@ hub.refreshData = function(id, token){
 			hub.drawGraph(hub.predictionGraphData, today.getTime(), today.getTime() + 14*24*60*60*1000, true);
 		},
 		error : function(data){
-			swal("Error", "There was an error during the call.<br>" + data.message, "error");
+			swal("Error", "There was an error during the call.<br>Sorry for the inconvinence.", "error");
 		}
 	});
 };
@@ -128,7 +126,7 @@ hub.getTodaysItemUse = function(user_id, token, item){
 			}
 		},
 		error : function(data){
-			swal("Error", "There was an error during the call.<br>" + data.message, "error");
+			swal("Error", "There was an error during the call.<br>Sorry for the inconvinence.", "error");
 		}
 	});
 };
@@ -155,7 +153,7 @@ hub.getUseArchiveData = function(user_id, token, item_id, item_name){
 			hub.drawGraph(hub.consumptionGraphData.data, today.getTime() - 14*24*60*60*1000, today.getTime(), false);
 		},
 		error : function(data){
-			swal("Error", "There was an error during the call.<br>" + data.message, "error");
+			swal("Error", "There was an error during the call.<br>Sorry for the inconvinence.", "error");
 		}
 	});
 };
@@ -196,7 +194,7 @@ $(document).ready(function(){
 						}
 					},
 					error : function(){ //Delete unsuccessful
-						swal("Error", "There was an error during the call.<br>" + data.message, "error");
+						swal("Error", "There was an error during the call.<br>Sorry for the inconvinence.", "error");
 					}
 				});
 			}
@@ -209,10 +207,12 @@ $(document).ready(function(){
 		$(".inventory-name").html(hub.data[pos].name);
 		$("#inventory-unit").html(hub.data[pos].unit);
 		$("#inventory-modal").modal('show');
+		$("#inventory-update").data("pos", pos);
 	});
 	$("#inventory-update").click(function(){
 		//inventory-qty
 		var val = $("#inventory-qty").val();
+		var pos = $(this).data("pos");
 		if(val == ""){
 			swal("Error", "Please enter a quantity.", "error");
 		} else if(isNaN(val)){
@@ -220,9 +220,8 @@ $(document).ready(function(){
 		} else if (!Number.isInteger(Number.parseFloat(val))){
 			swal("Error", "The inventory is not an integer.", "error");
 		} else {
-			var item_id = $("input[name='item_radio']:checked").data("id"); //Get id of checked item
 			$.ajax({
-				url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + item_id + "&item_qty=" + val,
+				url : "/api/items.php?user_id=" + id + "&user_token=" + token + "&item_id=" + hub.data[pos].id + "&item_qty=" + val,
 				method : 'PATCH',
 				cache : false,
 				context : document.body,
@@ -235,7 +234,7 @@ $(document).ready(function(){
 					}
 				},
 				error : function(data){
-					swal("Error", "There was an error during the call.<br>" + data.message, "error");
+					swal("Error", "There was an error during the call.<br>Sorry for the inconvinence.", "error");
 				}
 			});
 		}
@@ -286,7 +285,7 @@ $(document).ready(function(){
 					}
 				},
 				error : function(data){
-					swal("Error", "There was an error during the call.<br>" + data.message, "error");
+					swal("Error", "There was an error during the call.<br>Sorry for the inconvinence.", "error");
 				}
 			});
 		}
@@ -349,9 +348,6 @@ $(document).ready(function(){
 					dataType : "json",
 					statusCode : {
 						201 : function(){
-							for(var i = 0; i < itemsToSend.length; i++){
-								ocpu.call("updateModels", { item_id : itemsToSend[i].item_id});
-							}
 							// Success message
 							swal("Success", "Use data successfully added.", "success").then(() => {
 								hub.refreshData(id, token); //Refresh the data
@@ -359,7 +355,7 @@ $(document).ready(function(){
 						}
 					},
 					error : function(data){
-						swal("Error", "There was an error during the call.<br>" + data.message, "error");
+						swal("Error", "There was an error during the call.<br>Sorry for the inconvinence.", "error");
 					}
 				});
 			} else if(itemsToSend.length <= 0){

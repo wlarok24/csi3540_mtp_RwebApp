@@ -134,7 +134,7 @@
 		}
 		/* Respond to the different requests */
 		if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-			error_log(json_encode($_POST)); //Log POST
+			//error_log(json_encode($_POST)); //Log POST
 			if($_GET["op"] == "signup"){
 				signup();				
 			} else if ($_GET["op"] == "signin"){
