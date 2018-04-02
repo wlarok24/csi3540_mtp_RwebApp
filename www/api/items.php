@@ -68,7 +68,7 @@
 				$id = $_GET['item_id'];
 				$qty = $_GET['item_qty'];
 				if(isset($id)&&isset($qty)){
-					//$update = "UPDATE item SET inventory = {$qty} WHERE id = {$id}";
+					$update = "UPDATE item SET inventory = {$qty} WHERE id = {$id}";
 					if ($conn->query($update) === TRUE) {
 						//Change http response code 
 						http_response_code(200);

@@ -42,7 +42,7 @@ hub.drawGraph = function(data, minDate, maxDate, line){
 		},
 		series: {
 			lines: {
-				show: true
+				show: line
 			},
 			points: {
 				show: true
@@ -207,12 +207,12 @@ $(document).ready(function(){
 		$(".inventory-name").html(hub.data[pos].name);
 		$("#inventory-unit").html(hub.data[pos].unit);
 		$("#inventory-modal").modal('show');
-		$("#inventory-update").data("pos", pos);
+		$("#inventory-update").val(pos);
 	});
 	$("#inventory-update").click(function(){
 		//inventory-qty
 		var val = $("#inventory-qty").val();
-		var pos = $(this).data("pos");
+		var pos = $(this).val();
 		if(val == ""){
 			swal("Error", "Please enter a quantity.", "error");
 		} else if(isNaN(val)){
