@@ -24,9 +24,8 @@ Mon idée pour le projet est de créer un web app pour permettre de gérer notre
   * Sign up
     * Création de nouveau compte
   * My Settings
-    * Changer le mot de passe
-* Côté serveur
-  * Certification HTTPS avec Let’s Encrypt (optionnel)
+    * Changer le mot de passe* Côté serveur (serveur LAMP)
+  * Certification HTTPS avec [Let’s Encrypt](https://letsencrypt.org/) (optionnel)
   * Base de donnée MySQL
   * API PHP
     * Usager
@@ -53,10 +52,12 @@ Mon idée pour le projet est de créer un web app pour permettre de gérer notre
   * PHP7
 * R (Côté serveur et client)
   * [OpenCPU](https://www.opencpu.org/)
+* HTTPS (optionnel)
+  * [Let’s Encrypt](https://letsencrypt.org/) 
   
 ## Structure de l'archive (Repo)
-![Alt text](/docs/RepoHierarchy.png "Strucure de l'archive")
-![Alt text](/docs/RPkgHierarchy.png "Strucure du package R")
+![Alt text](/docs/RepoHierarchy.png "Structure de l'archive")
+![Alt text](/docs/RPkgHierarchy.png "Structure du package R")
 
 ## Installation et Utilisation
 ### Installation serveur LAMP
@@ -76,17 +77,18 @@ Mon idée pour le projet est de créer un web app pour permettre de gérer notre
    Require all granted
   </Directory>
   ```
-6. Partir *MySQL* avec une des commandes suivantes :
+6. *(Optionnel - Recommandé pour serveur public)* Sécuriser votre site avec une certification HTTPS en suivant ce [tutoriel](https://www.digitalocean.com/community/tutorials/how-to-secure-apache-with-let-s-encrypt-on-ubuntu-16-04).
+7. Partir *MySQL* avec une des commandes suivantes :
   > sudo service mysql start **ou** /etc/init.d/mysql start
-7. Exécuter le fichier **deploy/dbcreate.sh** qui va créer la base de données et les *credentials* avec la commande suivante:
+8. Exécuter le fichier **deploy/dbcreate.sh** qui va créer la base de données et les *credentials* avec la commande suivante:
   > bash dbcreate.sh
-8. **Important** Déplacer les fichiers *credentials* dans les bons répertoires.
+9. **Important** Déplacer les fichiers *credentials* dans les bons répertoires.
   * **apiCredentials.php** va dans le répertoire **/www/** du repo.
   * **RDBCredentials.csv** va dans le répertoire **csi3540RwebApp/data** du repo.
-9. *(Optionnel)* Populer la base de donnée avec un usager de test ("Test user") avec la commande suivante :
+10. *(Optionnel)* Populer la base de donnée avec un usager de test ("Test user") avec la commande suivante :
     > php deploy/dbpopulate.php
   * Le courriel de l'usager est "test_user@example.com" et son mot de passe est "password"
-10. Tester le serveur.
+11. Tester le serveur.
   * Partir le serveur apache avec :
     > sudo service apache2 start
   * Accéder au site avec l'addresse que vous avez choisi.
@@ -94,7 +96,7 @@ Mon idée pour le projet est de créer un web app pour permettre de gérer notre
   * Si vous réussissez, tenter de vous connecter ("Log in").
   * **Si vous ne réussissez pas les étapes c ou d, aller voir l'error log avec la commande suivante :**
     > cat /var/log/apache2/error.log
-11. Fermer les serveurs avec les commandes suivantes :
+12. Fermer les serveurs avec les commandes suivantes :
  > sudo service mysql stop **ou** /etc/init.d/mysql stop  
  > sudo service apache2 stop
 
