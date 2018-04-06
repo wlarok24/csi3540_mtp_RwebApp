@@ -191,6 +191,9 @@ $(document).ready(function(){
 							swal("Deleted!", "The item was successfully deleted!", "success").then(() => {
 								hub.refreshData(id, token); //Refresh the data
 							});
+						},
+						401 : function(){
+							swal("Error", "Your session is invalid.<br>You will be logged out.", "error").then(logout);
 						}
 					},
 					error : function(){ //Delete unsuccessful
@@ -231,6 +234,9 @@ $(document).ready(function(){
 							hub.refreshData(id, token); //Refresh the data
 							$("#inventory-modal").modal('hide');
 						});
+					},
+					401 : function(){
+						swal("Error", "Your session is invalid.<br>You will be logged out.", "error").then(logout);
 					}
 				},
 				error : function(data){
@@ -282,6 +288,9 @@ $(document).ready(function(){
 							hub.refreshData(id, token); //Refresh the data
 							$("#item-modal").modal('hide');
 						});
+					},
+					401 : function(){
+						swal("Error", "Your session is invalid.<br>You will be logged out.", "error").then(logout);
 					}
 				},
 				error : function(data){
@@ -352,6 +361,9 @@ $(document).ready(function(){
 							swal("Success", "Use data successfully added.", "success").then(() => {
 								hub.refreshData(id, token); //Refresh the data
 							});
+						},
+						401 : function(){
+							swal("Error", "Your session is invalid.<br>You will be logged out.", "error").then(logout);
 						}
 					},
 					error : function(data){
