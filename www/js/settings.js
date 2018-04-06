@@ -34,6 +34,9 @@ $(document).ready(function(){
 			statusCode : {
 				200 : function(data){ //Sign up successful
 					swal("Success!", "Password changed successfully!", "success");
+				},
+				401 : function(){
+					swal("Error", "Your session is invalid.<br>You will be logged out.", "error").then(logout);
 				}
 			},
 			error : function(data){ //Sign up unsuccessful
